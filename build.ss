@@ -7,6 +7,6 @@
     "libp2p/peer"
     "libp2p/daemon"
     "libp2p/client"
-    "libp2p/pb/p2pd.proto"
-    "libp2p/pb/identify.proto"
+    "libp2p/pb/p2pd"
+    "libp2p/pb/identify"
     ))

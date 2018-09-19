@@ -1,4 +1,4 @@
-#lang :std/protobuf/proto
+#lang :std/protobuf/proto ; -*- Protobuf -*-
 
 syntax = "proto2";
 

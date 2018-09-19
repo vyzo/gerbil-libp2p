@@ -1,4 +1,4 @@
-#lang :std/protobuf/proto
+#lang :std/protobuf/proto ; -*- Protobuf -*-
 
 package p2pd.pb;
 
