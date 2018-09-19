@@ -9,6 +9,9 @@
         :std/net/socket
         :std/net/bio
         :std/protobuf/io
+        :std/os/pid
+        :std/misc/threads
+        :std/logger
         :vyzo/libp2p/daemon
         :vyzo/libp2p/peer
         :vyzo/libp2p/multiaddr
@@ -20,7 +23,7 @@
 (def (raise-libp2p-error where what . irritants)
   (raise (make-libp2p-error what irritants where)))
 
-(defstruct client (d mx sock handlers)
+(defstruct client (d mx handlers path sock thread)
   final: #t)
 
 (defstruct stream (sock in out info)
@@ -28,7 +31,9 @@
 
 (defmethod {destroy stream}
   (lambda (self)
-    (ssocket-close (stream-sock self))))
+    (when (stream-sock self)
+      (ssocket-close (stream-sock self))
+      (set! (stream-sock self) #f))))
 
 (def (stream-write-delimited s obj bio-write-e)
   (bio-write-delimited obj bio-write-e (stream-out s))
@@ -37,9 +42,9 @@
 (def (stream-read-delimited s bio-read-e)
   (bio-read-delimited bio-read-e (stream-in s)))
 
-(def (open-libp2p-client)
+(def (open-libp2p-client (path #f))
   (let (d (start-libp2p-daemon!))
-    (make-client d (make-mutex 'libp2p-client) #f (make-hash-table))))
+    (make-client d (make-mutex 'libp2p-client) (make-hash-table) path #f #f)))
 
 (def (open-stream c bufsz)
   (let (sock (ssocket-connect (daemon-path (client-d c))))
@@ -91,8 +96,75 @@
           (do-control-request s req Response-streamInfo))
          (info
           (cons (StreamInfo-proto res)
-                (peer-info id (multiaddr (StreamInfo-addr res))))))
+                (peer-info id [(multiaddr (StreamInfo-addr res))]))))
     (set! (stream-info s)
       info)
     (make-will s stream::destroy)
     s))
+
+(def (libp2p-listen c protos handler)
+  (with ((client _ mx handlers path sock) c)
+    (with-lock mx
+      (lambda ()
+        (unless sock
+          (let* ((path
+                  (or path
+                      (string-append "/tmp/p2pd.client." (number->string (getpid)) ".sock")))
+                 (_ (when (file-exists? path) (delete-file path)))
+                 (sock
+                  (ssocket-listen path)))
+            (set! (client-path c) path)
+            (set! (client-sock c) sock)
+            (set! (client-thread c)
+              (spawn/group 'libp2p client-accept c))))
+        (let (req
+              (Request
+               type: 'STREAM_HANDLER
+               streamHandler: (StreamHandlerRequest
+                               path: (client-path c)
+                               proto: protos)))
+          (control-request c req void)
+          (for-each (cut hash-put! handlers <> handler)
+                    protos))))))
+
+(def (client-accept c)
+  (let (sock (client-sock c))
+    (while #t
+      (let (cli (ssocket-accept sock))
+        (spawn client-dispatch c cli)))))
+
+(def (client-dispatch c sock)
+  (let* ((s (make-stream sock
+                       (open-ssocket-input-buffer sock)
+                       (open-ssocket-output-buffer sock)
+                       #f))
+         (info (stream-read-delimited s bio-read-StreamInfo))
+         (info (cons (StreamInfo-proto info)
+                     (peer-info (ID (StreamInfo-peer info))
+                                [(multiaddr (StreamInfo-addr info))]))))
+    (set! (stream-info s)
+      info)
+    (cond
+     ((with-lock (client-mx c) (cut hash-get (client-handlers c) (car info)))
+      => (lambda (handler)
+           (dispatch-handler handler s)))
+     (else
+      (warning "Incoming stream for unknown protocol: ~a" (car info))
+      {destroy s}))))
+
+(def (dispatch-handler handler s)
+  (try
+   (handler s)
+   (catch (e)
+     (log-error "Unhandled exception" e)
+     {destroy s})))
+
+
+(def (libp2p-close c)
+  (with ((client _ mx _ _ sock thread) c)
+    (with-lock mx
+      (when sock
+        (ssocket-close sock)
+        (thread-group-kill! (thread-thread-group thread))
+        (set! (client-sock c) #f)
+        (set! (client-thread c) #f)))))
