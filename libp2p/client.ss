@@ -9,6 +9,8 @@
         :std/net/bio
         :std/protobuf/io
         :vyzo/libp2p/daemon
+        :vyzo/libp2p/peer
+        :vyzo/libp2p/multiaddr
         :vyzo/libp2p/pb/p2pd)
 (export #t)
 
@@ -62,5 +64,6 @@
        (error "Unexpected response type" (Response-type res))))))
 
 (def (libp2p-identify c)
-  ;; TODO: decode the response to a friendlier representation
-  (control-request c (Request type: 'IDENTIFY) Response-identify))
+  (let (res (control-request c (Request type: 'IDENTIFY) Response-identify))
+    (peer-info (ID (IdentifyResponse-id res))
+               (map make-multiaddr (IdentifyResponse-addrs res)))))
