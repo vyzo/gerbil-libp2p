@@ -48,15 +48,18 @@
 (def (control-request c req response-e)
   (let (s (open-stream c 256))
     (with-destroy s
-      (stream-write-delimited s (Request type: 'IDENTIFY) bio-write-Request)
-      (let (res (stream-read-delimited s bio-read-Response))
-        (case (Response-type res)
-          ((OK)
-           (response-e res))
-          ((ERROR)
-           (raise-libp2p-error 'libp2p-identify (ErrorResponse-msg (Response-error res))))
-          (else
-           (error "Unexpected response type" (Response-type res))))))))
+      (do-control-request s req response-e))))
+
+(def (do-control-request s req response-e)
+  (stream-write-delimited s (Request type: 'IDENTIFY) bio-write-Request)
+  (let (res (stream-read-delimited s bio-read-Response))
+    (case (Response-type res)
+      ((OK)
+       (response-e res))
+      ((ERROR)
+       (raise-libp2p-error 'libp2p-identify (ErrorResponse-msg (Response-error res))))
+      (else
+       (error "Unexpected response type" (Response-type res))))))
 
 (def (libp2p-identify c)
   ;; TODO: decode the response to a friendlier representation
