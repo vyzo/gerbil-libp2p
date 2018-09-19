@@ -29,11 +29,13 @@
 (defstruct stream (sock in out info)
   final: #t)
 
+(def (stream-close s)
+  (when (stream-sock s)
+    (ssocket-close (stream-sock s))
+    (set! (stream-sock s) #f)))
+
 (defmethod {destroy stream}
-  (lambda (self)
-    (when (stream-sock self)
-      (ssocket-close (stream-sock self))
-      (set! (stream-sock self) #f))))
+  stream-close)
 
 (def (stream-write-delimited s obj bio-write-e)
   (bio-write-delimited obj bio-write-e (stream-out s))
@@ -99,7 +101,7 @@
                 (peer-info id [(multiaddr (StreamInfo-addr res))]))))
     (set! (stream-info s)
       info)
-    (make-will s stream::destroy)
+    (make-will s stream-close)
     s))
 
 (def (libp2p-listen c protos handler)
@@ -147,17 +149,18 @@
     (cond
      ((with-lock (client-mx c) (cut hash-get (client-handlers c) (car info)))
       => (lambda (handler)
+           (make-will s stream-close)
            (dispatch-handler handler s)))
      (else
       (warning "Incoming stream for unknown protocol: ~a" (car info))
-      {destroy s}))))
+      (stream-close s)))))
 
 (def (dispatch-handler handler s)
   (try
    (handler s)
    (catch (e)
      (log-error "Unhandled exception" e)
-     {destroy s})))
+     (stream-close s))))
 
 
 (def (libp2p-close c)
