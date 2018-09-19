@@ -1,20 +1,20 @@
-* Gerbil Bindings for libp2p
+# Gerbil Bindings for libp2p
 
 Implements libp2p bindings for Gerbil, using the
 [libp2p daemon](https://github.com/libp2p/go-libp2p-daemon).
 
-** Installation
+## Installation
 
 Requires a very recent Gerbil with [protobuf support](https://github.com/vyzo/gerbil/pull/133).
 
-#+BEGIN_EXAMPLE
+```
 gxpkg install github.com/vyzo/gerbil-libp2p
-#+END_EXAMPLE
+```
 
-** Usage
+## Usage
 
 TBD
 
-** License
+## License
 
 MIT; © 2018 vyzo
