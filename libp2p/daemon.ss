@@ -23,7 +23,7 @@
            (proc (open-process [path: bin arguments: ["-q" "-sock" sock]]))
            (d (daemon proc sock)))
       (cond
-       ((process-status proc 0.1 #f)
+       ((process-status proc 0.05 #f)
         => (lambda (status)
              (error "p2pd exited prematurely" status))))
       (current-libp2p-daemon d)
