@@ -3,6 +3,7 @@
 ;;; libp2p daemon management
 
 (import :gerbil/gambit/threads
+        :gerbil/gambit/misc
         :std/sugar
         :std/error
         :std/net/socket
@@ -53,7 +54,7 @@
       (do-control-request s req response-e))))
 
 (def (do-control-request s req response-e)
-  (stream-write-delimited s (Request type: 'IDENTIFY) bio-write-Request)
+  (stream-write-delimited s req bio-write-Request)
   (let (res (stream-read-delimited s bio-read-Response))
     (case (Response-type res)
       ((OK)
@@ -67,3 +68,31 @@
   (let (res (control-request c (Request type: 'IDENTIFY) Response-identify))
     (peer-info (ID (IdentifyResponse-id res))
                (map make-multiaddr (IdentifyResponse-addrs res)))))
+
+
+(def (libp2p-connect c pinfo)
+  (let (req
+        (Request
+         type: 'CONNECT
+         connect: (ConnectRequest
+                   peer: (ID-bytes (peer-info-id pinfo))
+                   addrs: (map multiaddr-bytes (peer-info-addrs pinfo)))))
+    (control-request c req void)))
+
+(def (libp2p-stream c id protos (bufsz 4096))
+  (let* ((s (open-stream c bufsz))
+         (req
+          (Request
+           type: 'STREAM_OPEN
+           streamOpen: (StreamOpenRequest
+                        peer: (ID-bytes id)
+                        proto: protos)))
+         (res
+          (do-control-request s req Response-streamInfo))
+         (info
+          (cons (StreamInfo-proto res)
+                (peer-info id (multiaddr (StreamInfo-addr res))))))
+    (set! (stream-info s)
+      info)
+    (make-will s stream::destroy)
+    s))
