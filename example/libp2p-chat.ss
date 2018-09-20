@@ -64,6 +64,7 @@
   (def gopt
     (getopt listen-cmd dial-cmd help-cmd))
 
+  (start-logger!)
   (try
    (let ((values cmd opt) (getopt-parse gopt args))
      (let-hash opt
