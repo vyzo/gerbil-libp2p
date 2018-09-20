@@ -5,10 +5,6 @@
 (import :std/net/address
         :std/net/bio
         :std/protobuf/io)
-#;(export (struct-out multiaddr)
-        multiaddr->string
-        string->multiaddr
-        defprotocol)
 (export #t)
 
 (defstruct multiaddr (bytes)
