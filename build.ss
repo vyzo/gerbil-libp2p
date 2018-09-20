@@ -11,4 +11,5 @@
     "libp2p/pb/identify"
     "libp2p"
     (exe: "example/libp2p-echo")
+    (exe: "example/libp2p-chat")
     ))
