@@ -67,7 +67,7 @@
       ((OK)
        (response-e res))
       ((ERROR)
-       (raise-libp2p-error 'libp2p-identify (ErrorResponse-msg (Response-error res))))
+       (raise-libp2p-error 'libp2p-request (ErrorResponse-msg (Response-error res))))
       (else
        (error "Unexpected response type" (Response-type res))))))
 

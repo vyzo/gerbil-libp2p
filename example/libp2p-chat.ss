@@ -47,7 +47,7 @@
        ((string-empty? line)
         (lp))
        (else
-        (displayln ">> \x1b[32m" line "\x1b[0m")
+        (displayln "\x1b[32m" line "\x1b[0m")
         (display "> ")
         (lp))))))
 
