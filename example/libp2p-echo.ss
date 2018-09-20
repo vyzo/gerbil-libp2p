@@ -26,8 +26,9 @@
 (def (echo-handler s)
   (debug "New stream from ~a" (peer-info->string (cdr (stream-info s))))
   (let (line (bio-read-line (stream-in s) #\newline #t 4096))
-    (bio-write-string line (stream-out s))
-    (bio-force-output (stream-out s)))
+    (unless (eof-object? line)
+      (bio-write-string line (stream-out s))
+      (bio-force-output (stream-out s))))
   (stream-close s))
 
 ;; echo client -- sends a message followed by a newline, and reads back the response
