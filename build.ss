@@ -9,4 +9,6 @@
     "libp2p/client"
     "libp2p/pb/p2pd"
     "libp2p/pb/identify"
+    "libp2p"
+    (exe: "example/libp2p-echo")
     ))
