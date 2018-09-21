@@ -1,6 +1,6 @@
 ;;; -*- Gerbil -*-
 ;;; © vyzo
-;;; libp2p cha example
+;;; libp2p chat example
 
 (import :gerbil/gambit/threads
         :std/getopt

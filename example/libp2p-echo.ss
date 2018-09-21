@@ -9,11 +9,7 @@
         :std/logger
         :std/net/bio
         :vyzo/libp2p)
-(export main
-        echo-proto
-        register-echo-handler!
-        echo-handler
-        do-echo)
+(export main)
 
 (def echo-proto "/echo/1.0.0")
 
@@ -69,7 +65,6 @@
      (catch (getopt-error? exn)
        (getopt-display-help exn "libp2p-echo" (current-error-port))
        (exit 1))))
-
 
 (def (do-listen)
   (let* ((c (open-libp2p-client))
