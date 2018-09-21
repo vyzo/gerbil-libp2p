@@ -37,6 +37,13 @@ For example code, interoperable with its Go implementation:
 
 ## Reference
 
+Here we document the bindings provided by the `:vyzo/libp2p` library.
+
+To use the library:
+```
+(import :vyzo/libp2p)
+```
+
 ### Daemon Control
 
 You don't normally have to start the daemon, as `open-libp2p-client` will start one
