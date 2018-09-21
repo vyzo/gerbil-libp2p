@@ -19,8 +19,9 @@
 ;; the chat protocol [see https://github.com/libp2p/go-libp2p-examples/tree/master/chat]
 ;; peers write newline delimited messages to one another
 (def (chat-handler s)
-  (displayln "Incoming connection from " (peer-info->string (cdr (stream-info s))))
-  (do-chat s))
+  (displayln "*** Incoming connection from " (peer-info->string (cdr (stream-info s))))
+  (do-chat s)
+  (displayln "*** STREAM CLOSED"))
 
 (def (do-chat s)
   (let (reader (spawn chat-reader s))
