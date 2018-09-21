@@ -30,9 +30,13 @@
   final: #t)
 
 (def (stream-close s)
-  (when (stream-sock s)
-    (ssocket-close (stream-sock s))
+  (alet (sock (stream-sock s))
+    (ssocket-close sock)
     (set! (stream-sock s) #f)))
+
+(def (stream-close-output s)
+  (alet (sock (stream-sock s))
+    (ssocket-close-output sock #t)))
 
 (defmethod {destroy stream}
   stream-close)

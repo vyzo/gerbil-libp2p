@@ -212,6 +212,14 @@ Returns stream info, as a pair of protocol and `peer-info`.
 
 Closes the stream.
 
+#### stream-close-output
+```
+(stream-close-output s)
+  s := stream
+```
+
+Closes the output direction of stream.
+
 #### stream-write-delimited
 ```
 (stream-write-delimited s obj bio-write-e)
