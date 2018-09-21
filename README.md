@@ -24,10 +24,10 @@ Requires a very recent Gerbil with [protobuf support](https://github.com/vyzo/ge
 gxpkg install github.com/vyzo/gerbil-libp2p
 ```
 
-## Examples
-
 You need to have have the libp2p daemon executable (`p2pd`) in your
 path or have a running daemon you can connect to.
+
+## Examples
 
 For example code, interoperable with its Go implementation:
 - [echo](example/libp2p-echo.ss) implements the echo protocol corresponding to
@@ -115,7 +115,7 @@ Identifies the daemon.
 #### libp2p-connect
 ```
 (libp2p-connect c peer)
-  c     := client
+  c    := client
   peer := peer-info
 ```
 
@@ -155,6 +155,7 @@ Closes a libp2p client.
 #### libp2p-error?
 ```
 (libp2p-error? obj)
+=> boolean
 ```
 
 Returns true if the obj is an error raised in a control operation to the daemon.
