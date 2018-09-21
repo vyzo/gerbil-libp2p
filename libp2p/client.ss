@@ -89,6 +89,7 @@
 (def (libp2p-stream c peer protos (bufsz 4096))
   (let* ((id (if (ID? peer) peer (peer-info-id peer)))
          (s (open-stream c bufsz))
+         (_ (make-will s stream-close))
          (req
           (Request
            type: 'STREAM_OPEN
@@ -102,7 +103,6 @@
                 (peer-info id [(multiaddr (StreamInfo-addr res))]))))
     (set! (stream-info s)
       info)
-    (make-will s stream-close)
     s))
 
 (def (libp2p-listen c protos handler)
@@ -141,6 +141,7 @@
                        (open-ssocket-input-buffer sock)
                        (open-ssocket-output-buffer sock)
                        #f))
+         (_ (make-will s stream-close))
          (info (stream-read-delimited s bio-read-StreamInfo))
          (info (cons (StreamInfo-proto info)
                      (peer-info (ID (StreamInfo-peer info))
@@ -150,7 +151,7 @@
     (cond
      ((with-lock (client-mx c) (cut hash-get (client-handlers c) (car info)))
       => (lambda (handler)
-           (make-will s stream-close)
+
            (dispatch-handler handler s)))
      (else
       (warning "Incoming stream for unknown protocol: ~a" (car info))
