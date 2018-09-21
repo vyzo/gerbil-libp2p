@@ -75,9 +75,9 @@
          ((dial)
           (do-dial .peer))
          ((help)
-          (getopt-display-help-topic gopt .?command "libp2p-echo")))))
+          (getopt-display-help-topic gopt .?command "libp2p-chat")))))
      (catch (getopt-error? exn)
-       (getopt-display-help exn "libp2p-echo" (current-error-port))
+       (getopt-display-help exn "libp2p-chat" (current-error-port))
        (exit 1))))
 
 (def (do-listen)
