@@ -134,7 +134,7 @@
   (let (sock (client-sock c))
     (while #t
       (let (cli (ssocket-accept sock))
-        (spawn client-dispatch c cli)))))
+        (spawn/name 'libp2p-stream client-dispatch c cli)))))
 
 (def (client-dispatch c sock)
   (let* ((s (make-stream sock
