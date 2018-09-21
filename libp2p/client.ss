@@ -86,8 +86,9 @@
                    addrs: (map multiaddr-bytes (peer-info-addrs pinfo)))))
     (control-request c req void)))
 
-(def (libp2p-stream c id protos (bufsz 4096))
-  (let* ((s (open-stream c bufsz))
+(def (libp2p-stream c peer protos (bufsz 4096))
+  (let* ((id (if (ID? peer) peer (peer-info-id peer)))
+         (s (open-stream c bufsz))
          (req
           (Request
            type: 'STREAM_OPEN

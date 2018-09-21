@@ -119,13 +119,13 @@ Identifies the daemon.
   peer := peer-info
 ```
 
-Opens a connection to `peer`.
+Ensures there is a connection open to `peer`.
 
 #### libp2p-stream
 ```
-(libp2p-stream c id protos)
+(libp2p-stream c peer protos)
   c      := client
-  id     := ID; the peer ID
+  peer   := ID or peer-info; the peer for the stream
   protos := list of strings; the protocols to use for the stream
 => stream
 ```

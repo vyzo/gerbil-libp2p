@@ -30,7 +30,7 @@
 ;; echo client -- sends a message followed by a newline, and reads back the response
 (def (do-echo c peer what)
   (libp2p-connect c peer)
-  (let (s (libp2p-stream c (peer-info-id peer) [echo-proto]))
+  (let (s (libp2p-stream c peer [echo-proto]))
     (with-destroy s
       (bio-write-string what (stream-out s))
       (bio-write-char #\newline (stream-out s))

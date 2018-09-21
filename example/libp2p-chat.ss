@@ -96,5 +96,5 @@
       (displayln "I am " p))
     (displayln "Connecting to " (peer-info->string peer))
     (libp2p-connect c peer)
-    (let (s (libp2p-stream c (peer-info-id peer) [chat-proto]))
+    (let (s (libp2p-stream c peer [chat-proto]))
       (do-chat s))))
