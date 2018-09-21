@@ -14,8 +14,11 @@
   use-libp2-daemon!
   ;; :vyzo/libp2p/client
   libp2p-error?
-  client?
-  (struct-out stream)
+  (rename: client? libp2p-client?)
+  stream?
+  stream-in
+  stream-out
+  stream-info
   stream-close
   stream-write-delimited
   stream-read-delimited
