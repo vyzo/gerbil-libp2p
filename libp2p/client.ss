@@ -32,7 +32,8 @@
 (def (stream-close s)
   (alet (sock (stream-sock s))
     (ssocket-close sock)
-    (set! (stream-sock s) #f)))
+    (set! (stream-sock s) #f)
+    (void)))
 
 (def (stream-close-output s)
   (alet (sock (stream-sock s))
