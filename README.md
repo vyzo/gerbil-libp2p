@@ -54,10 +54,12 @@ want to reuse a running daemon.
 ```
 (start-libp2p-daemon! [daemon: (daemon "p2pd")]
                       [options: (options [])]
-                      [address: (address #f)])
+                      [address: (address #f)]
+                      [wait: (wait .4)])
  daemon  := string; the daemon executable
  options := list of strings; options to pass to the daemon
  address := daemon unix socket path
+ wait    := how long to wait for daemon to initialize
 => <daemon>
 ```
 

@@ -16,7 +16,8 @@
 
 (def (start-libp2p-daemon! daemon: (bin "p2pd")
                            options: (args [])
-                           address: (sock #f))
+                           address: (sock #f)
+                           wait: (timeo 0.4))
   (cond
    ((current-libp2p-daemon)
     => values)
@@ -25,7 +26,7 @@
            (proc (open-process [path: bin arguments: ["-q" "-sock" sock args ...]]))
            (d (daemon proc sock)))
       (cond
-       ((process-status proc 1 #f)
+       ((process-status proc timeo #f)
         => (lambda (status)
              (error "p2pd exited prematurely" status))))
       (current-libp2p-daemon d)
