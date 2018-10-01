@@ -13,9 +13,6 @@
         :vyzo/libp2p/pb/p2pd)
 (export #t)
 
-(defrules XXX ()
-  (_ (error "XXX Implement me!")))
-
 (def (libp2p-dht-find-peer c p (timeout #f))
   (let* ((req (Request
                type: 'DHT
@@ -118,7 +115,7 @@
                      timeout: (request-timeout timeout))))
          (_ (with-error-stream-close s (do-control-request s req void)))
          (ch (make-channel)))
-    (spawn dht-channel-pump ch s (lambda (r) (ID (DHTResponse-value r))))
+    (spawn dht-channel-pump ch s (lambda (r) (pb->peer-info (DHTResponse-peer r))))
     ch))
 
 (def (libp2p-dht-find-providers c cid (count #f) (timeout #f))
