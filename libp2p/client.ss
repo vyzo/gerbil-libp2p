@@ -181,7 +181,8 @@
 
 (def (libp2p-list-peers c)
   (let (res (control-request c (Request type: 'LIST_PEERS) Response-peers))
-    (map (lambda (pi)
-           (peer-info (ID (PeerInfo-id pi))
-                      (map make-multiaddr (PeerInfo-addrs pi))))
-         res)))
+    (map pb->peer-info res)))
+
+(def (pb->peer-info pi)
+  (peer-info (ID (PeerInfo-id pi))
+             (map make-multiaddr (PeerInfo-addrs pi))))
