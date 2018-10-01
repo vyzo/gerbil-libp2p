@@ -5,6 +5,7 @@
 (import :vyzo/libp2p/daemon
         :vyzo/libp2p/client
         :vyzo/libp2p/dht
+        :vyzo/libp2p/cid
         :vyzo/libp2p/peer
         :vyzo/libp2p/multiaddr)
 (export
@@ -44,6 +45,12 @@
   libp2p-dht-find-providers*
   libp2p-dht-find-providers
   libp2p-dht-provide
+  ;; :vyzo/libp2p/cid
+  CID?
+  CIDv1 CIDv1Raw CIDv1Raw/sha256
+  CID->string string->CID
+  CID->bytes bytes->CID
+  multihash? multihash-sha256
   ;; :vyzo/libp2p/peer
   (struct-out ID peer-info)
   ID->string string->ID
