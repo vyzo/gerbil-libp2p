@@ -42,5 +42,5 @@
           (delete-file path))
         status))))
 
-(def (use-libp2-daemon! path)
+(def (use-libp2p-daemon! path)
   (current-libp2p-daemon (daemon #f path)))

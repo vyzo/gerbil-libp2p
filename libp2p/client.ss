@@ -178,3 +178,10 @@
         (thread-group-kill! (thread-thread-group thread))
         (set! (client-sock c) #f)
         (set! (client-thread c) #f)))))
+
+(def (libp2p-list-peers c)
+  (let (res (control-request c (Request type: 'LIST_PEERS) Response-peers))
+    (map (lambda (pi)
+           (peer-info (ID (PeerInfo-id pi))
+                      (map make-multiaddr (PeerInfo-addrs pi))))
+         res)))

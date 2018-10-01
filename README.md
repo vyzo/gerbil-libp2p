@@ -72,9 +72,9 @@ Ensures that a daemon is running, and starts it if there isn't one.
 
 Kills the libp2p daemon if it was started with `start-libp2p-daemon!`.
 
-#### use-libp2-daemon!
+#### use-libp2p-daemon!
 ```
-(use-libp2-daemon! path)
+(use-libp2p-daemon! path)
   path := string; daemon unix socket path
 => <daemon>
 ```
@@ -168,6 +168,16 @@ Closes a libp2p client.
 ```
 
 Returns true if the obj is an error raised in a control operation to the daemon.
+
+
+#### libp2p-list-peers
+```
+(libp2p-list-peers c)
+  c := client
+=> list of peer-info
+```
+
+Lists the peers currently connected to the daemon.
 
 
 ### Stream Objects
