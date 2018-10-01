@@ -7,6 +7,7 @@
         :std/iter
         :std/misc/channel
         :vyzo/libp2p/client
+        :vyzo/libp2p/cid
         :vyzo/libp2p/peer
         :vyzo/libp2p/multiaddr
         :vyzo/libp2p/pb/p2pd)
@@ -107,16 +108,31 @@
     (control-request c req void)))
 
 (def (libp2p-dht-find-providers* c cid (count #f) (timeout #f))
-  XXX
-  )
+  (let* ((s (open-stream c 1024))
+         (req (Request
+               type: 'DHT
+               dht: (DHTRequest
+                     type: 'FIND_PROVIDERS
+                     cid: (CID->bytes cid)
+                     count: count
+                     timeout: (request-timeout timeout))))
+         (_ (with-error-stream-close s (do-control-request s req void)))
+         (ch (make-channel)))
+    (spawn dht-channel-pump ch s (lambda (r) (ID (DHTResponse-value r))))
+    ch))
 
 (def (libp2p-dht-find-providers c cid (count #f) (timeout #f))
   (for (ch (libp2p-dht-find-providers* c cid count timeout))
     (for/collect (v ch) v)))
 
 (def (libp2p-dht-provide c cid (timeout #f))
-  XXX
-  )
+  (let (req (Request
+             type: 'DHT
+             dht: (DHTRequest
+                   type: 'PROVIDE
+                   cid: (CID->bytes cid)
+                   timeout: (request-timeout timeout))))
+    (control-request c req void)))
 
 ;; utilities
 (def (request-timeout timeout)
