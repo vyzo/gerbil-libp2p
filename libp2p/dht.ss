@@ -91,7 +91,7 @@
     ch))
 
 (def (libp2p-dht-search-value c key (timeout #f))
-  (for (ch (libp2p-dht-search-value* c key timeout))
+  (let (ch (libp2p-dht-search-value* c key timeout))
     (for/collect (v ch) v)))
 
 (def (libp2p-dht-put-value c key val (timeout #f))
@@ -119,7 +119,7 @@
     ch))
 
 (def (libp2p-dht-find-providers c cid (count #f) (timeout #f))
-  (for (ch (libp2p-dht-find-providers* c cid count timeout))
+  (let (ch (libp2p-dht-find-providers* c cid count timeout))
     (for/collect (v ch) v)))
 
 (def (libp2p-dht-provide c cid (timeout #f))
