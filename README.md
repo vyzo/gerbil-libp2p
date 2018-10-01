@@ -10,8 +10,10 @@ Implements [libp2p](https://github.com/libp2p) bindings for Gerbil, using the
 - [Reference](#reference)
   * [Daemon Control](#daemon-control)
   * [libp2p API](#libp2p-api)
+  * [libp2p DHT API](#libp2p-dht-api)
   * [Stream Objects](#stream-objects)
   * [Peers and Addresses](#peers-and-addresses)
+  * [Content Identifiers](#content-identifiers)
 - [License](#license)
 
 <!-- tocstop -->
@@ -180,6 +182,145 @@ Returns true if the obj is an error raised in a control operation to the daemon.
 Lists the peers currently connected to the daemon.
 
 
+### libp2p DHT API
+#### libp2p-dht-find-peer
+```
+(libp2p-dht-find-peer c p [timeout = #f])
+  c := client
+  p := ID
+=> peer-info
+```
+
+Finds a peer in the DHT.
+
+#### libp2p-dht-find-peers-connected-to-peer*
+```
+(libp2p-dht-find-peers-connected-to-peer* c p [timeout = #f])
+  c := client
+  p := ID
+=> channel of peer-info
+```
+
+Asynchronously finds peers connected to a peer in the DHT;
+the results are returned through a channel.
+
+#### libp2p-dht-find-peers-connected-to-peer
+```
+(libp2p-dht-find-peers-connected-to-peer c p [timeout = #f])
+  c := client
+  p := ID
+=> list of peer-info
+```
+
+Synchronously finds peers connected to a peer in the DHT;
+the results are collected in a list.
+
+#### libp2p-dht-get-closest-peers*
+```
+(libp2p-dht-get-closest-peers* c key [timeout = #f])
+  c   := client
+  key := string
+=> channel of peer IDs
+```
+
+Asynchronously finds peers closest to a key in the DHT;
+the results are returned through a channel.
+
+#### libp2p-dht-get-closest-peers
+```
+(libp2p-dht-get-closest-peers c key [timeout = #f])
+  c   := client
+  key := string
+=> list of peer IDs
+```
+
+Synchronously finds peers closest to a key in the DHT;
+the results are returned in a list.
+
+#### libp2p-dht-get-public-key
+```
+(libp2p-dht-get-public-key c p [timeout = #f])
+  c := client
+  p := ID
+=> u8vector
+```
+
+Finds a peer's public key in the DHT.
+
+#### libp2p-dht-get-value
+```
+(libp2p-dht-get-value c key [timeout = #f])
+  c   := client
+  key := string
+=> u8vector
+```
+
+Finds the (best) value assocaited with a key in the DHT.
+
+#### libp2p-dht-search-value*
+```
+(libp2p-dht-search-value* c key [timeout = #f])
+  c   := client
+  key := string
+=> channel of u8vector
+```
+
+Asynchronously searches for values associated with a key in the DHT;
+the results are returned through a channel.
+
+#### libp2p-dht-search-value
+```
+(libp2p-dht-search-value c key [timeout = #f])
+  c   := client
+  key := string
+=> list of u8vector
+```
+
+Synchronously searches for values associated with a key in the DHT;
+the results are returned in a list.
+
+
+#### libp2p-dht-put-value
+```
+(libp2p-dht-put-value c key val [timeout = #f])
+  c   := client
+  key := string
+  val := u8vector
+```
+
+Associates a value with a key in the DHT.
+
+#### libp2p-dht-find-providers*
+```
+(libp2p-dht-find-providers* c cid [count = #f] [timeout = #f])
+  c   := client
+  cid := CID
+=> channel of peer-info
+```
+
+Asynchronously searches for providers of a Content Identifier in the DHT;
+the results are returned throuogh a channel.
+
+#### libp2p-dht-find-providers
+```
+(libp2p-dht-find-providers  c cid [count = #f] [timeout = #f])
+  c   := client
+  cid := CID
+=> list of peer-info
+```
+
+Synchronously searches for providers of a Content Identifier in the DHT;
+the results are returned in a list.
+
+#### libp2p-dht-provide
+```
+(libp2p-dht-provide c cid [timeout = #f])
+ c   := client
+ cid := CID
+```
+
+Registers as a content provider for a Content Identifier in the DHT.
+
 ### Stream Objects
 #### stream?
 ```
@@ -256,7 +397,6 @@ This is typically a protobuf deserializer.
 
 
 ### Peers and Addresses
-
 #### ID
 ```
 (struct ID (bytes))
@@ -342,6 +482,99 @@ Converts a multiaddr to a string.
 ```
 
 Parses a string to a multiaddr.
+
+### Content Identifiers
+
+#### CID?
+```
+(CID? obj)
+=> boolean
+```
+
+Returns true if the object is a Content Identifier
+
+#### CIDv1
+```
+(CIDv1 c mh)
+  c  := content code
+  mh := multihash
+=> CID
+```
+
+Constructs a CID v1 object.
+
+#### CIDv1Raw
+```
+(CIDv1Raw mh)
+  mh := multihash
+=> CID
+```
+
+Costructs a Raw CID v1 object.
+
+#### CIDv1Raw/sha256
+```
+(CIDv1Raw/sha256 content)
+  content := string, u8vector, or input-port; the content to hash
+=> CID
+```
+
+Constructs a Raw CID v1 object by hashing `content`.
+
+
+#### CID-&gt;string
+```
+(CID->string cid)
+  cid := CID
+=> string
+```
+
+Converts a CID object to a string.
+
+#### string-&gt;CID
+```
+(string->CID str)
+  str := string
+=> CID
+```
+
+Parses a string to a CID object.
+
+#### CID-&gt;bytes
+```
+(CID->bytes cid)
+  cid := CID
+=> u8vector
+```
+
+Encodes a CID object to its binary representation.
+
+#### bytes-&gt;CID
+```
+(bytes->CID bytes)
+  bytes := u8vector
+=> CID
+```
+
+Decodes a CID object from its binary representation.
+
+#### multihash?
+```
+(multihash? obj)
+=> boolean
+```
+
+Returns true if the object is a multihash object.
+
+#### multihash-sha256
+```
+(multihash-sha256 content)
+  content := string, u8vector, or input-port
+=> multihash
+```
+
+Computes the sha256 multihash for `content`.
+
 
 ## License
 
