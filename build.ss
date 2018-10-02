@@ -14,4 +14,5 @@
     "libp2p"
     (exe: "example/libp2p-echo")
     (exe: "example/libp2p-chat")
+    (exe: "example/dht-crawl")
     ))

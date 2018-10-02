@@ -37,6 +37,9 @@ For example code, interoperable with its Go implementation:
 - [chat](example/libp2p-chat.ss) implements the chat protocol corresponding to
   the [chat libp2p example](https://github.com/libp2p/go-libp2p-examples/tree/master/chat).
 
+Additional examples:
+- [dht-crawl](example/dht-crawl.ss) is a little DHT crawler.
+
 ## Reference
 
 Here we document the bindings provided by the `:vyzo/libp2p` library.
