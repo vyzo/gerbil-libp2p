@@ -10,7 +10,7 @@ Implements [libp2p](https://github.com/libp2p) bindings for Gerbil, using the
 - [Reference](#reference)
   * [Daemon Control](#daemon-control)
   * [libp2p API](#libp2p-api)
-  * [libp2p DHT API](#libp2p-dht-api)
+  * [DHT API](#dht-api)
   * [Stream Objects](#stream-objects)
   * [Peers and Addresses](#peers-and-addresses)
   * [Content Identifiers](#content-identifiers)
@@ -182,7 +182,7 @@ Returns true if the obj is an error raised in a control operation to the daemon.
 Lists the peers currently connected to the daemon.
 
 
-### libp2p DHT API
+### DHT API
 #### libp2p-dht-find-peer
 ```
 (libp2p-dht-find-peer c p [timeout = #f])
