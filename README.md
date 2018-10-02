@@ -183,9 +183,9 @@ Lists the peers currently connected to the daemon.
 
 
 ### DHT API
-#### libp2p-dht-find-peer
+#### dht-find-peer
 ```
-(libp2p-dht-find-peer c p [timeout = #f])
+(dht-find-peer c p [timeout = #f])
   c := client
   p := ID
 => peer-info
@@ -193,9 +193,9 @@ Lists the peers currently connected to the daemon.
 
 Finds a peer in the DHT.
 
-#### libp2p-dht-find-peers-connected-to-peer*
+#### dht-find-peers-connected-to-peer*
 ```
-(libp2p-dht-find-peers-connected-to-peer* c p [timeout = #f])
+(dht-find-peers-connected-to-peer* c p [timeout = #f])
   c := client
   p := ID
 => channel of peer-info
@@ -204,9 +204,9 @@ Finds a peer in the DHT.
 Asynchronously finds peers connected to a peer in the DHT;
 the results are returned through a channel.
 
-#### libp2p-dht-find-peers-connected-to-peer
+#### dht-find-peers-connected-to-peer
 ```
-(libp2p-dht-find-peers-connected-to-peer c p [timeout = #f])
+(dht-find-peers-connected-to-peer c p [timeout = #f])
   c := client
   p := ID
 => list of peer-info
@@ -215,9 +215,9 @@ the results are returned through a channel.
 Synchronously finds peers connected to a peer in the DHT;
 the results are collected in a list.
 
-#### libp2p-dht-get-closest-peers*
+#### dht-get-closest-peers*
 ```
-(libp2p-dht-get-closest-peers* c key [timeout = #f])
+(dht-get-closest-peers* c key [timeout = #f])
   c   := client
   key := string
 => channel of peer IDs
@@ -226,9 +226,9 @@ the results are collected in a list.
 Asynchronously finds peers closest to a key in the DHT;
 the results are returned through a channel.
 
-#### libp2p-dht-get-closest-peers
+#### dht-get-closest-peers
 ```
-(libp2p-dht-get-closest-peers c key [timeout = #f])
+(dht-get-closest-peers c key [timeout = #f])
   c   := client
   key := string
 => list of peer IDs
@@ -237,9 +237,9 @@ the results are returned through a channel.
 Synchronously finds peers closest to a key in the DHT;
 the results are returned in a list.
 
-#### libp2p-dht-get-public-key
+#### dht-get-public-key
 ```
-(libp2p-dht-get-public-key c p [timeout = #f])
+(dht-get-public-key c p [timeout = #f])
   c := client
   p := ID
 => u8vector
@@ -247,9 +247,9 @@ the results are returned in a list.
 
 Finds a peer's public key in the DHT.
 
-#### libp2p-dht-get-value
+#### dht-get-value
 ```
-(libp2p-dht-get-value c key [timeout = #f])
+(dht-get-value c key [timeout = #f])
   c   := client
   key := string
 => u8vector
@@ -257,9 +257,9 @@ Finds a peer's public key in the DHT.
 
 Finds the (best) value assocaited with a key in the DHT.
 
-#### libp2p-dht-search-value*
+#### dht-search-value*
 ```
-(libp2p-dht-search-value* c key [timeout = #f])
+(dht-search-value* c key [timeout = #f])
   c   := client
   key := string
 => channel of u8vector
@@ -268,9 +268,9 @@ Finds the (best) value assocaited with a key in the DHT.
 Asynchronously searches for values associated with a key in the DHT;
 the results are returned through a channel.
 
-#### libp2p-dht-search-value
+#### dht-search-value
 ```
-(libp2p-dht-search-value c key [timeout = #f])
+(dht-search-value c key [timeout = #f])
   c   := client
   key := string
 => list of u8vector
@@ -280,9 +280,9 @@ Synchronously searches for values associated with a key in the DHT;
 the results are returned in a list.
 
 
-#### libp2p-dht-put-value
+#### dht-put-value
 ```
-(libp2p-dht-put-value c key val [timeout = #f])
+(dht-put-value c key val [timeout = #f])
   c   := client
   key := string
   val := u8vector
@@ -290,9 +290,9 @@ the results are returned in a list.
 
 Associates a value with a key in the DHT.
 
-#### libp2p-dht-find-providers*
+#### dht-find-providers*
 ```
-(libp2p-dht-find-providers* c cid [count = #f] [timeout = #f])
+(dht-find-providers* c cid [count = #f] [timeout = #f])
   c   := client
   cid := CID
 => channel of peer-info
@@ -301,9 +301,9 @@ Associates a value with a key in the DHT.
 Asynchronously searches for providers of a Content Identifier in the DHT;
 the results are returned throuogh a channel.
 
-#### libp2p-dht-find-providers
+#### dht-find-providers
 ```
-(libp2p-dht-find-providers  c cid [count = #f] [timeout = #f])
+(dht-find-providers  c cid [count = #f] [timeout = #f])
   c   := client
   cid := CID
 => list of peer-info
@@ -312,9 +312,9 @@ the results are returned throuogh a channel.
 Synchronously searches for providers of a Content Identifier in the DHT;
 the results are returned in a list.
 
-#### libp2p-dht-provide
+#### dht-provide
 ```
-(libp2p-dht-provide c cid [timeout = #f])
+(dht-provide c cid [timeout = #f])
  c   := client
  cid := CID
 ```

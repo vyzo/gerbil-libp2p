@@ -32,19 +32,19 @@
   libp2p-close
   libp2p-list-peers
   ;; :vyzo/libp2p/dht
-  libp2p-dht-find-peer
-  libp2p-dht-find-peers-connected-to-peer*
-  libp2p-dht-find-peers-connected-to-peer
-  libp2p-dht-get-closest-peers*
-  libp2p-dht-get-closest-peers
-  libp2p-dht-get-public-key
-  libp2p-dht-get-value
-  libp2p-dht-search-value*
-  libp2p-dht-search-value
-  libp2p-dht-put-value
-  libp2p-dht-find-providers*
-  libp2p-dht-find-providers
-  libp2p-dht-provide
+  dht-find-peer
+  dht-find-peers-connected-to-peer*
+  dht-find-peers-connected-to-peer
+  dht-get-closest-peers*
+  dht-get-closest-peers
+  dht-get-public-key
+  dht-get-value
+  dht-search-value*
+  dht-search-value
+  dht-put-value
+  dht-find-providers*
+  dht-find-providers
+  dht-provide
   ;; :vyzo/libp2p/cid
   CID?
   CIDv1 CIDv1Raw CIDv1Raw/sha256

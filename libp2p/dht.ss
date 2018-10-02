@@ -13,7 +13,7 @@
         :vyzo/libp2p/pb/p2pd)
 (export #t)
 
-(def (libp2p-dht-find-peer c p (timeout #f))
+(def (dht-find-peer c p (timeout #f))
   (let* ((req (Request
                type: 'DHT
                dht: (DHTRequest
@@ -23,7 +23,7 @@
          (res (control-request c req Response-dht)))
     (pb->peer-info (DHTResponse-peer res))))
 
-(def (libp2p-dht-find-peers-connected-to-peer* c p (timeout #f))
+(def (dht-find-peers-connected-to-peer* c p (timeout #f))
   (let* ((s (open-stream c 1024))
          (req (Request
                type: 'DHT
@@ -36,11 +36,11 @@
     (spawn dht-channel-pump ch s (lambda (r) (pb->peer-info (DHTResponse-peer r))))
     ch))
 
-(def (libp2p-dht-find-peers-connected-to-peer c p (timeout #f))
-  (let (ch (libp2p-dht-find-peers-connected-to-peer* c p timeout))
+(def (dht-find-peers-connected-to-peer c p (timeout #f))
+  (let (ch (dht-find-peers-connected-to-peer* c p timeout))
     (for/collect (v ch) v)))
 
-(def (libp2p-dht-get-closest-peers* c key (timeout #f))
+(def (dht-get-closest-peers* c key (timeout #f))
   (let* ((s (open-stream c 1024))
          (req (Request
                type: 'DHT
@@ -53,11 +53,11 @@
     (spawn dht-channel-pump ch s (lambda (r) (ID (DHTResponse-value r))))
     ch))
 
-(def (libp2p-dht-get-closest-peers c key (timeout #f))
-  (let (ch (libp2p-dht-get-closest-peers* c key timeout))
+(def (dht-get-closest-peers c key (timeout #f))
+  (let (ch (dht-get-closest-peers* c key timeout))
     (for/collect (v ch) v)))
 
-(def (libp2p-dht-get-public-key c p (timeout #f))
+(def (dht-get-public-key c p (timeout #f))
   (let* ((req (Request
                type: 'DHT
                dht: (DHTRequest
@@ -67,7 +67,7 @@
          (res (control-request c req Response-dht)))
     (DHTResponse-value res)))
 
-(def (libp2p-dht-get-value c key (timeout #f))
+(def (dht-get-value c key (timeout #f))
   (let* ((req (Request
                type: 'DHT
                dht: (DHTRequest
@@ -77,7 +77,7 @@
          (res (control-request c req Response-dht)))
     (DHTResponse-value res)))
 
-(def (libp2p-dht-search-value* c key (timeout #f))
+(def (dht-search-value* c key (timeout #f))
   (let* ((s (open-stream c 1024))
          (req (Request
                type: 'DHT
@@ -90,11 +90,11 @@
     (spawn dht-channel-pump ch s DHTResponse-value)
     ch))
 
-(def (libp2p-dht-search-value c key (timeout #f))
-  (let (ch (libp2p-dht-search-value* c key timeout))
+(def (dht-search-value c key (timeout #f))
+  (let (ch (dht-search-value* c key timeout))
     (for/collect (v ch) v)))
 
-(def (libp2p-dht-put-value c key val (timeout #f))
+(def (dht-put-value c key val (timeout #f))
   (let (req (Request
              type: 'DHT
              dht: (DHTRequest
@@ -104,7 +104,7 @@
                    timeout: (request-timeout timeout))))
     (control-request c req void)))
 
-(def (libp2p-dht-find-providers* c cid (count #f) (timeout #f))
+(def (dht-find-providers* c cid (count #f) (timeout #f))
   (let* ((s (open-stream c 1024))
          (req (Request
                type: 'DHT
@@ -118,11 +118,11 @@
     (spawn dht-channel-pump ch s (lambda (r) (pb->peer-info (DHTResponse-peer r))))
     ch))
 
-(def (libp2p-dht-find-providers c cid (count #f) (timeout #f))
-  (let (ch (libp2p-dht-find-providers* c cid count timeout))
+(def (dht-find-providers c cid (count #f) (timeout #f))
+  (let (ch (dht-find-providers* c cid count timeout))
     (for/collect (v ch) v)))
 
-(def (libp2p-dht-provide c cid (timeout #f))
+(def (dht-provide c cid (timeout #f))
   (let (req (Request
              type: 'DHT
              dht: (DHTRequest
