@@ -49,6 +49,13 @@
 (def (stream-read-delimited s bio-read-e)
   (bio-read-delimited bio-read-e (stream-in s)))
 
+(defrules with-error-stream-close ()
+  ((_ s body ...)
+   (try body ...
+        (catch (e)
+          (stream-close s)
+          (raise e)))))
+
 (def (open-libp2p-client (path #f))
   (let (d (start-libp2p-daemon!))
     (make-client d (make-mutex 'libp2p-client) (make-hash-table) path #f #f)))
@@ -94,7 +101,6 @@
 (def (libp2p-stream c peer protos (bufsz 4096))
   (let* ((id (if (ID? peer) peer (peer-info-id peer)))
          (s (open-stream c bufsz))
-         (_ (make-will s stream-close))
          (req
           (Request
            type: 'STREAM_OPEN
@@ -102,12 +108,14 @@
                         peer: (ID-bytes id)
                         proto: protos)))
          (res
-          (do-control-request s req Response-streamInfo))
+          (with-error-stream-close s
+            (do-control-request s req Response-streamInfo)))
          (info
           (cons (StreamInfo-proto res)
                 (peer-info id [(multiaddr (StreamInfo-addr res))]))))
     (set! (stream-info s)
       info)
+    (make-will s stream-close)
     s))
 
 (def (libp2p-listen c protos handler)

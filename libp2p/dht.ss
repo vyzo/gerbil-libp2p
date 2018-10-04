@@ -143,10 +143,3 @@
           (when (eq? (DHTResponse-type next) 'VALUE)
             (channel-put ch (value-e next))
             (lp)))))))
-
-(defrules with-error-stream-close ()
-  ((_ s body ...)
-   (try body ...
-        (catch (e)
-          (stream-close s)
-          (raise e)))))
