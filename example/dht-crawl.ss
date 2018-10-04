@@ -67,11 +67,12 @@
 
   (def (crawl-peer p)
     (let* ((pi (dht-find-peer c p))
-           (id (identify-peer p))
-           (pis (dht-find-peers-connected-to-peer c p)))
-      (debug "~a is connected to ~a peers" (ID->string p) (length pis))
-      (for (pi pis)
-        (channel-put work (peer-info-id pi)))
+           (id (try (identify-peer p) (catch (libp2p-error? e) #f)))
+           (pis (try (dht-find-peers-connected-to-peer c p) (catch (libp2p-error? e) []))))
+      (unless (null? pis)
+        (debug "~a is connected to ~a peers" (ID->string p) (length pis))
+        (for (pi pis)
+          (channel-put work (peer-info-id pi))))
       (write-peer p id pi pis)))
 
   (def (identify-peer p)
@@ -82,8 +83,7 @@
   (def (write-peer p id pi pis)
     (write-crawl-entry
      [(ID->string p)
-      (Identify-agentVersion id)
-      (Identify-protocols id)
+      (if id (cons (Identify-agentVersion id) (Identify-protocols id)) 'ERROR)
       (map multiaddr->string (peer-info-addrs pi))
       (map ID->string (map peer-info-id pis))]))
 
