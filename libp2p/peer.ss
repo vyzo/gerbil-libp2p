@@ -17,7 +17,7 @@
   (ID (base58-decode idstr)))
 
 (defstruct peer-info (id addrs)
-  final: #t)
+  final: #t equal: #t)
 
 (def (peer-info->string peer)
   (with ((peer-info id addrs) peer)

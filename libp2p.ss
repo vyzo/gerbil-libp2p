@@ -4,6 +4,8 @@
 
 (import :vyzo/libp2p/daemon
         :vyzo/libp2p/client
+        :vyzo/libp2p/dht
+        :vyzo/libp2p/cid
         :vyzo/libp2p/peer
         :vyzo/libp2p/multiaddr)
 (export
@@ -11,7 +13,7 @@
   current-libp2p-daemon
   start-libp2p-daemon!
   stop-libp2p-daemon!
-  use-libp2-daemon!
+  use-libp2p-daemon!
   ;; :vyzo/libp2p/client
   libp2p-error?
   (rename: client? libp2p-client?)
@@ -28,6 +30,27 @@
   libp2p-stream
   libp2p-listen
   libp2p-close
+  libp2p-list-peers
+  ;; :vyzo/libp2p/dht
+  dht-find-peer
+  dht-find-peers-connected-to-peer*
+  dht-find-peers-connected-to-peer
+  dht-get-closest-peers*
+  dht-get-closest-peers
+  dht-get-public-key
+  dht-get-value
+  dht-search-value*
+  dht-search-value
+  dht-put-value
+  dht-find-providers*
+  dht-find-providers
+  dht-provide
+  ;; :vyzo/libp2p/cid
+  CID?
+  CIDv1 CIDv1Raw CIDv1Raw/sha256
+  CID->string string->CID
+  CID->bytes bytes->CID
+  multihash? multihash-sha256
   ;; :vyzo/libp2p/peer
   (struct-out ID peer-info)
   ID->string string->ID

@@ -4,7 +4,9 @@
 
 (import :std/net/address
         :std/net/bio
-        :std/protobuf/io)
+        :std/protobuf/io
+        :std/text/utf8
+        :std/text/base58)
 (export #t)
 
 (defstruct multiaddr (bytes)
@@ -121,7 +123,12 @@
 (def P_HTTP    #x01E0)
 (def P_HTTPS   #x01BB)
 (def P_ONION   #x01BC)
+(def P_WS      #x01DD)
+(def P_WSS     #x01DE)
 (def P_CIRCUIT #x0122)
+(def P_DNS4    #x0036)
+(def P_DNS6    #x0037)
+(def P_DNSADDR #x0038)
 
 (def (port-string->bytes str)
   (let (port (string->number str))
@@ -138,5 +145,13 @@
             (##u8vector-ref bytes 1))))
 
 (defprotocol "ip4" P_IP4 4 #f string->ip4-address ip4-address->string)
-(defprotocol "tcp" P_TCP 2 #f port-string->bytes port-bytes->string)
 (defprotocol "ip6" P_IP6 16 #f string->ip6-address ip6-address->string)
+(defprotocol "tcp" P_TCP 2 #f port-string->bytes port-bytes->string)
+(defprotocol "ws"  P_WS 0 #f void void)
+(defprotocol "wss" P_WSS 0 #f void void)
+(defprotocol "quic" P_QUIC 0 #f void void)
+(defprotocol "p2p-circuit" P_CIRCUIT 0 #f void void)
+(defprotocol "ipfs" P_P2P -1 #f base58-decode base58-encode)
+(defprotocol "dns4" P_DNS4 -1 #f string->utf8 utf8->string)
+(defprotocol "dns6" P_DNS6 -1 #f string->utf8 utf8->string)
+(defprotocol "dnsaddr" P_DNSADDR -1 #f string->utf8 utf8->string)
