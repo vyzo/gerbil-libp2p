@@ -324,6 +324,37 @@ the results are returned in a list.
 
 Registers as a content provider for a Content Identifier in the DHT.
 
+### Connection Manager API
+
+#### libp2p-tag-peer
+```
+(libp2p-tag-peer c p tag w)
+  c := client
+  p := peer ID
+  tag := string; tag to associate with the peer
+  w := integer; weight to associate with the peer
+```
+
+Tags a peer in the connection manager.
+
+#### libp2p-untag-peer
+```
+(libp2p-untag-peer c p tag)
+  c := client
+  p := peer ID
+  tag := string; tag to remove from the peer
+```
+
+Untags a peer in the connection manager.
+
+#### libp2p-trim-open-connections
+```
+(libp2p-trim-open-connections c)
+  c := client
+```
+
+Asks the connection manager to trim open connections if necessary.
+
 ### Stream Objects
 #### stream?
 ```
