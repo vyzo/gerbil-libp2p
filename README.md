@@ -135,6 +135,15 @@ Identifies the daemon.
 
 Ensures there is a connection open to `peer`.
 
+#### libp2p-disconnect
+```
+(libp2p-disconnect c peer)
+  c    := client
+  peer := ID
+```
+
+Closes any open connections to `peer`.
+
 #### libp2p-stream
 ```
 (libp2p-stream c peer protos)
