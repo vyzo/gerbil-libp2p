@@ -3,6 +3,7 @@
 ;;; libp2p chat example
 
 (import :gerbil/gambit/threads
+        :gerbil/gambit/ports
         :std/getopt
         :std/sugar
         :std/iter
@@ -48,7 +49,11 @@
        ((string-empty? line)
         (lp))
        (else
-        (displayln "\x1b[32m" line "\x1b[0m")
+        (write-u8 #x1b)
+        (display "[32m")
+        (display line)
+        (write-u8 #x1b)
+        (displayln "[0m")
         (display "> ")
         (lp))))))
 

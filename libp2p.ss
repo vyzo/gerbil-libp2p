@@ -28,6 +28,7 @@
   open-libp2p-client
   libp2p-identify
   libp2p-connect
+  libp2p-disconnect
   libp2p-stream
   libp2p-listen
   libp2p-close
