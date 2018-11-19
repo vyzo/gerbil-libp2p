@@ -13,6 +13,7 @@ message Request {
     DHT            = 4;
     LIST_PEERS     = 5;
     CONNMANAGER    = 6;
+    DISCONNECT     = 7;
   }
 
   required Type type = 1;
@@ -22,6 +23,7 @@ message Request {
   optional StreamHandlerRequest streamHandler = 4;
   optional DHTRequest dht = 5;
   optional ConnManagerRequest connManager = 6;
+  optional DisconnectRequest disconnect = 7;
 }
 
 message Response {
@@ -109,9 +111,9 @@ message PeerInfo {
 
 message ConnManagerRequest {
   enum Type {
-    TAG_PEER   = 0;
-    UNTAG_PEER = 1;
-    TRIM       = 2;
+    TAG_PEER        = 0;
+    UNTAG_PEER      = 1;
+    TRIM            = 2;
   }
 
   required Type type = 1;
@@ -119,4 +121,8 @@ message ConnManagerRequest {
   optional bytes peer = 2;
   optional string tag = 3;
   optional int64 weight = 4;
+}
+
+message DisconnectRequest {
+  required bytes peer = 1;
 }
