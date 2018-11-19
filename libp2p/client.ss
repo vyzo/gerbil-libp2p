@@ -98,6 +98,14 @@
                    addrs: (map multiaddr-bytes (peer-info-addrs pinfo)))))
     (control-request c req void)))
 
+(def (libp2p-disconnect c p)
+  (let (req
+        (Request
+         type: 'DISCONNECT
+         disconnect: (DisconnectRequest
+                      peer: (ID-bytes p))))
+    (control-request c req void)))
+
 (def (libp2p-stream c peer protos (bufsz 4096))
   (let* ((id (if (ID? peer) peer (peer-info-id peer)))
          (s (open-stream c bufsz))
