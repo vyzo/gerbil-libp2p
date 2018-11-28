@@ -104,7 +104,7 @@
     (let (anchor (base64-encode (random-bytes 32)))
       (debug "Crawling from ~a" anchor)
       (let (peers (try
-                   (dht-get-closest-peers c anchor 120)
+                   (dht-get-closest-peers c anchor timeout: 120)
                    (catch (libp2p-error? e)
                      (log-error "Crawl error" e)
                      [])))
