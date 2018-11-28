@@ -48,11 +48,13 @@ message IdentifyResponse {
 message ConnectRequest {
   required bytes peer = 1;
   repeated bytes addrs = 2;
+  optional int64 timeout = 3;
 }
 
 message StreamOpenRequest {
   required bytes peer = 1;
   repeated string proto = 2;
+  optional int64 timeout = 3;
 }
 
 message StreamHandlerRequest {
