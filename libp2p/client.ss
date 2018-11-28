@@ -89,13 +89,14 @@
                (map make-multiaddr (IdentifyResponse-addrs res)))))
 
 
-(def (libp2p-connect c pinfo)
+(def (libp2p-connect c pinfo timeout: (timeout #f))
   (let (req
         (Request
          type: 'CONNECT
          connect: (ConnectRequest
                    peer: (ID-bytes (peer-info-id pinfo))
-                   addrs: (map multiaddr-bytes (peer-info-addrs pinfo)))))
+                   addrs: (map multiaddr-bytes (peer-info-addrs pinfo))
+                   timeout: (request-timeout timeout))))
     (control-request c req void)))
 
 (def (libp2p-disconnect c p)
@@ -106,7 +107,7 @@
                       peer: (ID-bytes p))))
     (control-request c req void)))
 
-(def (libp2p-stream c peer protos (bufsz 4096))
+(def (libp2p-stream c peer protos buffer: (bufsz 4096) timeout: (timeout #f))
   (let* ((id (if (ID? peer) peer (peer-info-id peer)))
          (s (open-stream c bufsz))
          (req
@@ -114,7 +115,8 @@
            type: 'STREAM_OPEN
            streamOpen: (StreamOpenRequest
                         peer: (ID-bytes id)
-                        proto: protos)))
+                        proto: protos
+                        timeout: (request-timeout timeout))))
          (res
           (with-error-stream-close s
             (do-control-request s req Response-streamInfo)))
@@ -202,3 +204,6 @@
 (def (pb->peer-info pi)
   (peer-info (ID (PeerInfo-id pi))
              (map make-multiaddr (PeerInfo-addrs pi))))
+
+(def (request-timeout timeout)
+  (and timeout (inexact->exact (floor (* timeout 1000000000)))))
