@@ -5,6 +5,7 @@
 (import :vyzo/libp2p/daemon
         :vyzo/libp2p/client
         :vyzo/libp2p/dht
+        :vyzo/libp2p/pubsub
         :vyzo/libp2p/connmgr
         :vyzo/libp2p/cid
         :vyzo/libp2p/peer
@@ -47,6 +48,12 @@
   dht-find-providers*
   dht-find-providers
   dht-provide
+  ;; :vyzo/libp2p/pubsub
+  pubsub-get-topics
+  pubsub-list-peers
+  pubsub-publish
+  pubsub-publisher
+  pubsub-subscribe
   ;; :vyzo/libp2p/connmgr
   libp2p-tag-peer
   libp2p-untag-peer

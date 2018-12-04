@@ -8,6 +8,7 @@
     "libp2p/daemon"
     "libp2p/client"
     "libp2p/dht"
+    "libp2p/pubsub"
     "libp2p/connmgr"
     "libp2p/cid"
     "libp2p/pb/p2pd"
