@@ -11,6 +11,7 @@ Implements [libp2p](https://github.com/libp2p) bindings for Gerbil, using the
   * [Daemon Control](#daemon-control)
   * [libp2p API](#libp2p-api)
   * [DHT API](#dht-api)
+  * [PubSub API](#pubsub-api)
   * [Stream Objects](#stream-objects)
   * [Peers and Addresses](#peers-and-addresses)
   * [Content Identifiers](#content-identifiers)
@@ -332,6 +333,62 @@ the results are returned in a list.
 ```
 
 Registers as a content provider for a Content Identifier in the DHT.
+
+### PubSub API
+
+#### pubsub-get-topics
+```
+(pubsub-get-topics c)
+  c := client
+=> list of string
+```
+
+Returns the pubsub topics to which the peer is subscribed
+
+#### pubsub-list-peers
+```
+(pubsub-list-peers c topic)
+  c     := client
+  topic := string
+=> list of ID
+```
+
+Returns the list of peers in a pubsub topic.
+
+#### pubsub-publish
+```
+(pubsub-publish c topic data)
+ c     := client
+ topic := string
+ data  := u8vector; the message to publish
+```
+
+Publishes a message to a pubsub topic.
+
+#### pubsub-publisher
+```
+(pubsub-publisher c topic)
+  c      := client
+  topic: = string
+=> (values publish cancel)
+  publish := lambda (u8vector); function to publish the next message
+  cancel  := lambda (); thunk to cancel the publisher
+```
+
+Creates a publisher function that reuses the connection to the daemon.
+
+#### pubsub-subscribe
+```
+(pubsub-subscribe c topic)
+  c      := client
+  topic: = string
+=> (values sub cancel)
+  sub    := channel; message channel
+  cancel := lambda (); thunk to cancel the subscription
+  message := (vector ID data seqno topics signature key)
+```
+
+Subscribes to a topic; messages are delivered through the returned channel.
 
 ### Connection Manager API
 

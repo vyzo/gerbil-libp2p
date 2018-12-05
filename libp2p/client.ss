@@ -206,4 +206,4 @@
              (map make-multiaddr (PeerInfo-addrs pi))))
 
 (def (request-timeout timeout)
-  (and timeout (inexact->exact timeout)))
+  (and timeout (inexact->exact (round timeout))))

@@ -14,6 +14,7 @@ message Request {
     LIST_PEERS     = 5;
     CONNMANAGER    = 6;
     DISCONNECT     = 7;
+    PUBSUB         = 8;
   }
 
   required Type type = 1;
@@ -24,6 +25,7 @@ message Request {
   optional DHTRequest dht = 5;
   optional ConnManagerRequest connManager = 6;
   optional DisconnectRequest disconnect = 7;
+  optional PSRequest pubsub = 8;
 }
 
 message Response {
@@ -38,6 +40,7 @@ message Response {
   optional IdentifyResponse identify = 4;
   optional DHTResponse dht = 5;
   repeated PeerInfo peers = 6;
+  optional PSResponse pubsub = 7;
 }
 
 message IdentifyResponse {
@@ -127,4 +130,31 @@ message ConnManagerRequest {
 
 message DisconnectRequest {
   required bytes peer = 1;
+}
+
+message PSRequest {
+  enum Type {
+    GET_TOPICS = 0;
+    LIST_PEERS = 1;
+    PUBLISH    = 2;
+    SUBSCRIBE  = 3;
+  }
+
+  required Type type = 1;
+  optional string topic = 2;
+  optional bytes data = 3;
+}
+
+message PSMessage {
+  optional bytes from = 1;
+  optional bytes data = 2;
+  optional bytes seqno = 3;
+  repeated string topicIDs = 4;
+  optional bytes signature = 5;
+  optional bytes key = 6;
+}
+
+message PSResponse {
+  repeated string topics = 1;
+  repeated bytes peerIDs = 2;
 }
