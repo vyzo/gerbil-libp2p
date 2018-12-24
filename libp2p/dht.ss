@@ -47,7 +47,7 @@
                type: 'DHT
                dht: (DHTRequest
                      type: 'GET_CLOSEST_PEERS
-                     key: (string->utf8 key)
+                     key: (dht-key key)
                      timeout: (request-timeout timeout))))
          (_ (with-error-stream-close s (do-control-request s req void)))
          (ch (make-channel)))
@@ -73,7 +73,7 @@
                type: 'DHT
                dht: (DHTRequest
                      type: 'GET_VALUE
-                     key: (string->utf8 key)
+                     key: (dht-key key)
                      timeout: (request-timeout timeout))))
          (res (control-request c req Response-dht)))
     (DHTResponse-value res)))
@@ -84,7 +84,7 @@
                type: 'DHT
                dht: (DHTRequest
                      type: 'SEARCH_VALUE
-                     key: (string->utf8 key)
+                     key: (dht-key key)
                      timeout: (request-timeout timeout))))
          (_ (with-error-stream-close s (do-control-request s req void)))
          (ch (make-channel)))
@@ -100,7 +100,7 @@
              type: 'DHT
              dht: (DHTRequest
                    type: 'PUT_VALUE
-                   key: (string->utf8 key)
+                   key: (dht-key key)
                    value: val
                    timeout: (request-timeout timeout))))
     (control-request c req void)))
@@ -141,3 +141,10 @@
           (when (eq? (DHTResponse-type next) 'VALUE)
             (channel-put ch (value-e next))
             (lp)))))))
+
+(def (dht-key key)
+  (cond
+   ((u8vector? key) key)
+   ((string? key) (string->utf8 key))
+   (else
+    (error "Illegal argument; expected u8vector or string" key))))
