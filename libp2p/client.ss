@@ -143,12 +143,15 @@
             (set! (client-sock c) sock)
             (set! (client-thread c)
               (spawn/group 'libp2p client-accept c))))
-        (let (req
-              (Request
-               type: 'STREAM_HANDLER
-               streamHandler: (StreamHandlerRequest
-                               path: (client-path c)
-                               proto: protos)))
+        (let* ((path (client-path c))
+               (addr (string-append "/unix" path))
+               (maddr (string->multiaddr addr))
+               (req
+                (Request
+                 type: 'STREAM_HANDLER
+                 streamHandler: (StreamHandlerRequest
+                                 addr: (multiaddr-bytes maddr)
+                                 proto: protos))))
           (control-request c req void)
           (for-each (cut hash-put! handlers <> handler)
                     protos))))))
