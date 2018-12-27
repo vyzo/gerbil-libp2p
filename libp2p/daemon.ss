@@ -22,9 +22,10 @@
    ((current-libp2p-daemon)
     => values)
    (else
-    (let* ((sock (or sock (string-append "/tmp/p2pd." (number->string (getpid)) ".sock")))
-           (proc (open-process [path: bin arguments: ["-q" "-sock" sock args ...]]))
-           (d (daemon proc sock)))
+    (let* ((path (or sock (string-append "/tmp/p2pd." (number->string (getpid)) ".sock")))
+           (addr (string-append "/unix" path))
+           (proc (open-process [path: bin arguments: ["-q" "-listen" addr args ...]]))
+           (d (daemon proc path)))
       (cond
        ((process-status proc timeo #f)
         => (lambda (status)

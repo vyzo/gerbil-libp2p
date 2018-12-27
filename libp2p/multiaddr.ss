@@ -155,3 +155,4 @@
 (defprotocol "dns4" P_DNS4 -1 #f string->utf8 utf8->string)
 (defprotocol "dns6" P_DNS6 -1 #f string->utf8 utf8->string)
 (defprotocol "dnsaddr" P_DNSADDR -1 #f string->utf8 utf8->string)
+(defprotocol "unix" P_UNIX -1 #t string->utf8 utf8->string)
