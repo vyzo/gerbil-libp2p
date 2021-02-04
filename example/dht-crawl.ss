@@ -22,6 +22,7 @@
              default: 10
              value: string->number
              help: "number of worker threads")
+    (argument 'host-addresses help: "Comma separated multi addresses")
      (optional-argument 'output
                         default: "dht-crawl.out"
                         help: "output file")))
@@ -29,22 +30,22 @@
   (try
    (let (opt (getopt-parse gopt args))
      (let-hash opt
-       (start-crawl! .output .workers)))
+       (start-crawl! .output .workers .host-addresses)))
    (catch (getopt-error? exn)
        (getopt-display-help exn "dht-crawl" (current-error-port))
        (exit 1))))
 
-(def (start-crawl! filename workers)
+(def (start-crawl! filename workers addresses)
   (call-with-output-file filename
     (lambda (file)
       (start-logger!)
       (debug "Starting p2pd")
-      (start-libp2p-daemon! options: ["-b" "-dhtClient" "-connManager"] wait: 10)
+      (start-libp2p-daemon! addresses options: ["-b" "-dhtClient" "-connManager"] wait: 10)
       (debug "Starting indefinite crawl; output to ~a" filename)
-      (crawl! file workers))))
+      (crawl! file workers addresses))))
 
-(def (crawl! file workers)
-  (def c (open-libp2p-client))
+(def (crawl! file workers addresses)
+  (def c (open-libp2p-client addresses))
   (def mx-out (make-mutex 'output))
   (def mx-peers (make-mutex 'peers))
   (def peers (make-hash-table))

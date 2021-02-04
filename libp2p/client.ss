@@ -56,8 +56,8 @@
           (stream-close s)
           (raise e)))))
 
-(def (open-libp2p-client (path #f))
-  (let (d (start-libp2p-daemon!))
+(def (open-libp2p-client host-address options: (args [])  address: (sock #f)  wait: (timeo 12) (path #f)) ;; Extra arguments host-address and options
+  (let (d (start-libp2p-daemon! host-address options: args address: sock wait: timeo)) ;; Should go with host-address/tranpsort/port
     (make-client d (make-mutex 'libp2p-client) (make-hash-table) path #f #f)))
 
 (def (open-stream c bufsz)
