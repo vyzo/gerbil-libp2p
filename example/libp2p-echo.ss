@@ -40,10 +40,13 @@
 ;; executable program
 (def (main . args)
   (def listen-cmd
-    (command 'listen help: "listen for incoming connections"))
+    (command 'listen help: "listen for incoming connections"
+    (argument 'host-addresses help: "Comma separated multi addresses")))
+
   (def dial-cmd
     (command 'dial help: "dial an echo peer"
              (argument 'peer value: string->peer-info help: "peer to dial")
+             (argument 'host-addresses help: "Comma separated multi addresses")
              (argument 'msg help: "what to say to the peer")))
   (def help-cmd
     (command 'help help: "display help; help <command> for command help"
@@ -57,24 +60,24 @@
      (let-hash opt
        (case cmd
          ((listen)
-          (do-listen))
+          (do-listen .host-addresses))
          ((dial)
-          (do-dial .peer .msg))
+          (do-dial .peer  .host-addresses .msg))
          ((help)
           (getopt-display-help-topic gopt .?command "libp2p-echo")))))
    (catch (getopt-error? exn)
      (getopt-display-help exn "libp2p-echo" (current-error-port))
      (exit 1))))
 
-(def (do-listen)
-  (let* ((c (open-libp2p-client))
+(def (do-listen addresses)
+  (let* ((c (open-libp2p-client host-addresses: addresses))
          (self (libp2p-identify c)))
     (for (p (peer-info->string* self))
       (displayln "I am " p))
     (libp2p-listen c [echo-proto] echo-handler)
     (thread-sleep! +inf.0)))
 
-(def (do-dial peer what)
-  (let* ((c (open-libp2p-client))
+(def (do-dial peer addresses what)
+  (let* ((c (open-libp2p-client host-addresses: addresses))
          (reply (do-echo c peer what)))
     (displayln (peer-info->string peer) " says: " what)))
