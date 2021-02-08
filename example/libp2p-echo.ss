@@ -70,7 +70,7 @@
      (exit 1))))
 
 (def (do-listen addresses)
-  (let* ((c (open-libp2p-client addresses))
+  (let* ((c (open-libp2p-client host-addresses: addresses))
          (self (libp2p-identify c)))
     (for (p (peer-info->string* self))
       (displayln "I am " p))
@@ -78,6 +78,6 @@
     (thread-sleep! +inf.0)))
 
 (def (do-dial peer addresses what)
-  (let* ((c (open-libp2p-client addresses))
+  (let* ((c (open-libp2p-client host-addresses: addresses))
          (reply (do-echo c peer what)))
     (displayln (peer-info->string peer) " says: " what)))

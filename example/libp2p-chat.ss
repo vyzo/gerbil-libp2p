@@ -62,7 +62,7 @@
 (def (main . args)
   (def listen-cmd
     (command 'listen help: "listen for incoming connections"
-              (argument 'host-addresses help: "Comma separated multi addresses")))
+               (argument 'host-addresses help: "Comma separated multi addresses")))
   (def dial-cmd
     (command 'dial help: "dial an echo peer"
              (argument 'peer value: string->peer-info help: "peer to dial")
@@ -89,7 +89,7 @@
      (exit 1))))
 
 (def (do-listen host-addresses)
-  (let* ((c (open-libp2p-client host-addresses wait: 20))
+  (let* ((c (open-libp2p-client host-addresses: host-addresses wait: 20))
          (self (libp2p-identify c)))
     (for (p (peer-info->string* self))
       (displayln "I am " p))
@@ -98,7 +98,7 @@
     (thread-sleep! +inf.0)))
 
 (def (do-dial peer host-addresses)
-  (let* ((c (open-libp2p-client host-addresses wait: 20))
+  (let* ((c (open-libp2p-client host-addresses: host-addresses wait: 20))
          (self (libp2p-identify c)))
     (for (p (peer-info->string* self))
       (displayln "I am " p))

@@ -40,7 +40,7 @@
     (lambda (file)
       (start-logger!)
       (debug "Starting p2pd")
-      (start-libp2p-daemon! addresses options: ["-b" "-dhtClient" "-connManager"] wait: 10)
+      (start-libp2p-daemon! host-addresses: addresses options: ["-b" "-dhtClient" "-connManager"] wait: 10)
       (debug "Starting indefinite crawl; output to ~a" filename)
       (crawl! file workers addresses))))
 
