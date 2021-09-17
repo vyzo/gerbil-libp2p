@@ -2,6 +2,32 @@
 ;;; -*- Gerbil -*-
 ;;; © vyzo
 ;;; libp2p chat example
+;;;
+;;; ------------------------------
+;;; Example Usage in local network
+;;; ------------------------------
+;;; Open 2 terminal windows:
+;;;
+;;; In the first terminal, start a node (A) which listens for incoming connections:
+;;; ```
+;;; > ./libp2p-chat.ss listen /ip4/0.0.0.0/tcp/10333/
+;;;
+;;; I am /ip4/10.0.0.6/tcp/10333/ipfs/<PeerId (A)>
+;;; I am /ip4/127.0.0.1/tcp/10333/ipfs/<PeerId (A)>
+;;; ```
+;;;
+;;; In the second terminal, start another node (B), which dials the listening node (A):
+;;; ```
+;;; > ./libp2p-chat.ss dial \
+;;; /ip4/127.0.0.1/tcp/10333/ipfs/<PeerId (A)> \
+;;; /ip4/0.0.0.0/tcp/10300
+;;;
+;;; I am /ip4/10.0.0.6/tcp/10300/ipfs/<PeerId (B)>
+;;; I am /ip4/127.0.0.1/tcp/10300/ipfs/<PeerId (B)>
+;;; Connecting to /ip4/127.0.0.1/tcp/10333/ipfs/<PeerId (A)>
+;;; ```
+;;;
+;;; And start chatting!
 
 (import :gerbil/gambit/threads
         :gerbil/gambit/ports
