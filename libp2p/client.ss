@@ -194,11 +194,12 @@
 (def (libp2p-close c)
   (with ((client _ mx _ _ sock thread) c)
     (with-lock mx
-      (when sock
-        (ssocket-close sock)
-        (thread-group-kill! (thread-thread-group thread))
-        (set! (client-sock c) #f)
-        (set! (client-thread c) #f)))))
+      (lambda ()
+        (when sock
+          (ssocket-close sock)
+          (thread-group-kill! (thread-thread-group thread))
+          (set! (client-sock c) #f)
+          (set! (client-thread c) #f))))))
 
 (def (libp2p-list-peers c)
   (let (res (control-request c (Request type: 'LIST_PEERS) Response-peers))
