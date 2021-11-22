@@ -16,7 +16,9 @@
         :vyzo/libp2p/peer
         :vyzo/libp2p/multiaddr
         :vyzo/libp2p/pb/p2pd)
-(export #t)
+(export (except-out #t errorf warnf infof debugf verbosef))
+
+(deflogger libp2p)
 
 (defstruct (libp2p-error <error>) ())
 
@@ -180,14 +182,14 @@
 
            (dispatch-handler handler s)))
      (else
-      (warning "Incoming stream for unknown protocol: ~a" (car info))
+      (warnf "Incoming stream for unknown protocol: ~a" (car info))
       (stream-close s)))))
 
 (def (dispatch-handler handler s)
   (try
    (handler s)
    (catch (e)
-     (log-error "Unhandled exception" e)
+     (errorf "Unhandled exception: ~a" e)
      (stream-close s))))
 
 

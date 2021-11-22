@@ -15,6 +15,8 @@
         :vyzo/libp2p/pb/identify)
 (export main)
 
+(deflogger libp2p)
+
 (def (main . args)
   (def gopt
     (getopt
@@ -39,9 +41,9 @@
   (call-with-output-file filename
     (lambda (file)
       (start-logger!)
-      (debug "Starting p2pd")
+      (debugf "Starting p2pd")
       (start-libp2p-daemon! host-addresses: addresses options: ["-b" "-dhtClient" "-connManager"] wait: 10)
-      (debug "Starting indefinite crawl; output to ~a" filename)
+      (debugf "Starting indefinite crawl; output to ~a" filename)
       (crawl! file workers addresses))))
 
 (def (crawl! file workers addresses)
@@ -60,10 +62,10 @@
           (hash-put! peers p #t)
           (mutex-unlock! mx-peers)
           (try
-           (debug "Crawling peer ~a" (ID->string p))
+           (debugf "Crawling peer ~a" (ID->string p))
            (crawl-peer p)
            (catch (e)
-             (log-error "Error crawling peer" e)
+             (errorf "Error crawling peer: ~a" e)
              (write-peer-error p)))))))
 
   (def (crawl-peer p)
@@ -71,7 +73,7 @@
            (id (try (identify-peer p) (catch (libp2p-error? e) #f)))
            (pis (try (dht-find-peers-connected-to-peer c p) (catch (libp2p-error? e) []))))
       (unless (null? pis)
-        (debug "~a is connected to ~a peers" (ID->string p) (length pis))
+        (debugf "~a is connected to ~a peers" (ID->string p) (length pis))
         (for (pi pis)
           (channel-put work (peer-info-id pi))))
       (write-peer p id pi pis)))
@@ -103,18 +105,18 @@
 
   (let loop ()
     (let (anchor (base64-encode (random-bytes 32)))
-      (debug "Crawling from ~a" anchor)
+      (debugf "Crawling from ~a" anchor)
       (let (peers (try
                    (dht-get-closest-peers c anchor timeout: 120)
                    (catch (libp2p-error? e)
-                     (log-error "Crawl error" e)
+                     (errorf "Crawl error: ~a" e)
                      [])))
         (if (null? peers)
           (begin
             (thread-sleep! 10)
             (loop))
           (begin
-            (debug "Found ~a peers" (length peers))
+            (debugf "Found ~a peers" (length peers))
             (for (p peers)
               (channel-put work p))
             (thread-sleep! 300)
