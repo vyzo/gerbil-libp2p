@@ -11,6 +11,8 @@
         :vyzo/libp2p)
 (export main)
 
+(deflogger libp2p)
+
 (def echo-proto "/echo/1.0.0")
 
 (def (register-echo-handler! c)
@@ -20,7 +22,7 @@
 ;; reads a line of text, echoes it back, and closes the stream
 ;; this implementation reads up to 4k chars because I don't like unbounded reads.
 (def (echo-handler s)
-  (debug "New stream from ~a" (peer-info->string (cdr (stream-info s))))
+  (debugf "New stream from ~a" (peer-info->string (cdr (stream-info s))))
   (let (line (bio-read-line (stream-in s) #\newline #t 4096))
     (unless (eof-object? line)
       (bio-write-string line (stream-out s))
