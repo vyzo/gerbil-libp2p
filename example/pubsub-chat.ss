@@ -110,7 +110,7 @@
     (let*-values (((sub cancel) (pubsub-subscribe c "chat"))
            (reader (spawn subscription-reader sub self)))
       (subscription-writer c)
-      (thread-terminate! reader)))) ;;TODO: Does this exit cleanly?
+      (thread-abort! reader)))) ;;TODO: Does this exit cleanly?
 
 ;;subscription-reader
 ;;sub: the message channel returned by pubsub-subscribe
