@@ -88,16 +88,21 @@
 (def (main . args)
   (def listen-cmd
     (command 'listen help: "listen for incoming connections"
-               (argument 'host-addresses help: "Comma separated multi addresses")))
+             (argument 'host-addresses help: "Comma separated multi addresses")
+             (argument 'circuit-relay value: string->peer-info help: "Multi address of the circuit relay")))
   (def dial-cmd
     (command 'dial help: "dial an echo peer"
-             (argument 'peer value: string->peer-info help: "peer to dial")
-             (argument 'host-addresses  help: "Comma separated multi addresses")))
+             (argument 'peer value: string->peer-info help: "Address of peer to dial")
+             (argument 'host-addresses  help: "Comma separated multi addresses")
+             (argument 'circuit-relay value: string->peer-info help: "Multiaddress of the circuit relay")))
+  (def gen-circuit-relay-cmd
+    (command 'gen-circuit-relay help: "generate a circuit relay to connect to"
+             (argument 'host-addresses help: "Comma seperated multiaddresses to host at")))
   (def help-cmd
     (command 'help help: "display help; help <command> for command help"
              (optional-argument 'command value: string->symbol)))
   (def gopt
-    (getopt listen-cmd dial-cmd help-cmd))
+    (getopt listen-cmd dial-cmd gen-circuit-relay-cmd))
 
   (start-logger!)
   (try
@@ -105,30 +110,44 @@
      (let-hash opt
        (case cmd
          ((listen)
-          (do-listen .host-addresses))
+          (do-listen .host-addresses .circuit-relay))
          ((dial)
-          (do-dial .peer .host-addresses))
+          (do-dial .peer .host-addresses .circuit-relay))
+         ((gen-circuit-relay)
+          (do-circuit-relay .host-addresses))
          ((help)
           (getopt-display-help-topic gopt .?command "libp2p-chat")))))
    (catch (getopt-error? exn)
      (getopt-display-help exn "libp2p-chat" (current-error-port))
      (exit 1))))
 
-(def (do-listen host-addresses)
+(def (do-listen host-addresses circuit-relay)
   (let* ((c (open-libp2p-client host-addresses: host-addresses wait: 20))
          (self (libp2p-identify c)))
     (for (p (peer-info->string* self))
       (displayln "I am " p))
     (displayln "Listening for incoming connections")
     (libp2p-listen c [chat-proto] chat-handler)
+    (displayln "Connecting to Circuit Relay")
+    (libp2p-connect c circuit-relay)
+    (displayln "Connected to Circuit Relay")
     (thread-sleep! +inf.0)))
 
-(def (do-dial peer host-addresses)
+(def (do-dial peer host-addresses circuit-relay)
   (let* ((c (open-libp2p-client host-addresses: host-addresses wait: 20))
          (self (libp2p-identify c)))
     (for (p (peer-info->string* self))
       (displayln "I am " p))
+    (libp2p-connect c circuit-relay)
     (displayln "Connecting to " (peer-info->string peer))
     (libp2p-connect c peer)
     (let (s (libp2p-stream c peer [chat-proto]))
       (do-chat s))))
+
+
+(def (do-circuit-relay host-addresses)
+  (let* ((d (start-libp2p-daemon! host-addresses: host-addresses options: ["-relayActive" "-relayHop"] wait: 20))
+         (c (open-libp2p-client host-addresses: host-addresses wait: 20)))
+    (for (p (peer-info->string* (libp2p-identify c)))
+      (displayln "I am " p))
+    (thread-sleep! +inf.0)))
