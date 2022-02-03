@@ -41,10 +41,10 @@
 (def (string->peer-info str)
   (match (reverse (pregexp-split ipfs-part-rx str))
     ([id . rest]
-     (peer-info (if (equal? rest '())
+     (peer-info (if (null? rest)
                   (error "Malformed peer info" str)
                   (string->ID id))
-                (let ((maddr (string-append-with-ipfs (reverse rest))))
+                (let ((maddr (string-join (reverse rest) "/ipfs/")))
                   (if (string-empty? maddr)
                     []
                     [(string->multiaddr maddr)]))))
