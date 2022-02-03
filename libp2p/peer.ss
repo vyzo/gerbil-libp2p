@@ -50,11 +50,3 @@
                     [(string->multiaddr maddr)]))))
     (else
      (error "Malformed peer info" str))))
-
-(def (string-append-with-ipfs lst)
-  (if (equal? lst '())
-    ""
-    (if (equal? (cdr lst) '())
-      (car lst)
-      (apply string-append
-           (list (car lst) "/ipfs/" (string-append-with-ipfs (cdr lst)))))))
