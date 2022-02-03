@@ -1,25 +1,38 @@
 #!/usr/bin/env gxi
 ;;; -*- Gerbil -*-
 ;;; © vyzo
-;;; libp2p chat example
+;;; Modified by: @bennewhall for circuit relay
+;;; libp2p chat example that uses circuit relay
 ;;;
 ;;; ------------------------------
 ;;; Example Usage in local network
 ;;; ------------------------------
-;;; Open 2 terminal windows:
+;;; Open 3 terminal windows:
 ;;;
-;;; In the first terminal, start a node (A) which listens for incoming connections:
-;;; ```
-;;; > ./libp2p-chat.ss listen /ip4/0.0.0.0/tcp/10333/
+;;; In the first terminal, start your circuit relay node, which allows for connections
+;;; between chat nodes
+;;; who may be unable to directly connect to one another.
 ;;;
-;;; I am /ip4/10.0.0.6/tcp/10333/ipfs/<PeerId (A)>
-;;; I am /ip4/127.0.0.1/tcp/10333/ipfs/<PeerId (A)>
+;;; ```
+;;; > ./libp2p-chat-with-circuit-relay.ss gen-circuit-relay /ip4/0.0.0.0/tcp/10333
+;;; I am /ip4/127.0.0.1/tcp/10333/ipfs/<CircuitRelayPeerID>
+;;; I am /ip4/192.168.0.7/tcp/10333/ipfs/<CircuitRelayPeerID>
 ;;; ```
 ;;;
-;;; In the second terminal, start another node (B), which dials the listening node (A):
+;;; In the second terminal, start a node (A) which listens for incoming connections
+;;; and connects to the circuit relay node:
 ;;; ```
-;;; > ./libp2p-chat.ss dial \
-;;; /ip4/127.0.0.1/tcp/10333/ipfs/<PeerId (A)> \
+;;; >./libp2p-chat-with-circuit-relay.ss listen /ip4/0.0.0.0/tcp/10330/ \
+;;;  /ip4/127.0.0.1/tcp/10333/ipfs/<CircuitRelayPeerID>
+;;;
+;;; I am /ip4/10.0.0.6/tcp/10330/ipfs/<PeerId (A)>
+;;; I am /ip4/127.0.0.1/tcp/10330/ipfs/<PeerId (A)>
+;;; ```
+;;;
+;;; In the third terminal, start another node (B), which dials the listening node (A) through the circuit relay:
+;;; ```
+;;; > ./libp2p-chat-with-circuit-relay.ss dial \
+;;; /ip4/127.0.0.1/tcp/10333/ipfs/<CircuitRelayPeerID>/p2p-circuit/ipfs/<PeerId (A)> \
 ;;; /ip4/0.0.0.0/tcp/10300
 ;;;
 ;;; I am /ip4/10.0.0.6/tcp/10300/ipfs/<PeerId (B)>
@@ -28,6 +41,10 @@
 ;;; ```
 ;;;
 ;;; And start chatting!
+;;;
+;;;
+;;; For more info on how circuit relays work and their uses, look at
+;;; https://docs.libp2p.io/concepts/circuit-relay/
 
 (import :gerbil/gambit/threads
         :gerbil/gambit/ports
@@ -128,7 +145,7 @@
     (displayln "Listening for incoming connections")
     (libp2p-listen c [chat-proto] chat-handler)
     (displayln "Connecting to Circuit Relay")
-    (libp2p-connect c circuit-relay)
+    (libp2p-connect c circuit-relay) ;;This allows for the dialing peer to dial the listener through the circuit relay
     (displayln "Connected to Circuit Relay")
     (thread-sleep! +inf.0)))
 
@@ -143,7 +160,7 @@
     (let (s (libp2p-stream c peer [chat-proto]))
       (do-chat s))))
 
-
+;;start a libp2p daemon that allows for circuit relays
 (def (do-circuit-relay host-addresses)
   (let* ((d (start-libp2p-daemon! host-addresses: host-addresses options: ["-relayActive" "-relayHop"] wait: 20))
          (c (open-libp2p-client host-addresses: host-addresses wait: 20)))
