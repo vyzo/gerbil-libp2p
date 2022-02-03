@@ -15,29 +15,29 @@
 ;;;
 ;;; ```
 ;;; > ./libp2p-chat-with-circuit-relay.ss gen-circuit-relay /ip4/0.0.0.0/tcp/10333
-;;; I am /ip4/127.0.0.1/tcp/10333/ipfs/<CircuitRelayPeerID>
-;;; I am /ip4/192.168.0.7/tcp/10333/ipfs/<CircuitRelayPeerID>
+;;; I am /ip4/127.0.0.1/tcp/10333/p2p/<CircuitRelayPeerID>
+;;; I am /ip4/192.168.0.7/tcp/10333/p2p/<CircuitRelayPeerID>
 ;;; ```
 ;;;
 ;;; In the second terminal, start a node (A) which listens for incoming connections
 ;;; and connects to the circuit relay node:
 ;;; ```
 ;;; >./libp2p-chat-with-circuit-relay.ss listen /ip4/0.0.0.0/tcp/10330/ \
-;;;  /ip4/127.0.0.1/tcp/10333/ipfs/<CircuitRelayPeerID>
+;;;  /ip4/127.0.0.1/tcp/10333/p2p/<CircuitRelayPeerID>
 ;;;
-;;; I am /ip4/10.0.0.6/tcp/10330/ipfs/<PeerId (A)>
-;;; I am /ip4/127.0.0.1/tcp/10330/ipfs/<PeerId (A)>
+;;; I am /ip4/10.0.0.6/tcp/10330/p2p/<PeerId (A)>
+;;; I am /ip4/127.0.0.1/tcp/10330/p2p/<PeerId (A)>
 ;;; ```
 ;;;
 ;;; In the third terminal, start another node (B), which dials the listening node (A) through the circuit relay:
 ;;; ```
 ;;; > ./libp2p-chat-with-circuit-relay.ss dial \
-;;; /ip4/127.0.0.1/tcp/10333/ipfs/<CircuitRelayPeerID>/p2p-circuit/ipfs/<PeerId (A)> \
+;;; /ip4/127.0.0.1/tcp/10333/p2p/<CircuitRelayPeerID>/p2p-circuit/p2p/<PeerId (A)> \
 ;;; /ip4/0.0.0.0/tcp/10300
 ;;;
-;;; I am /ip4/10.0.0.6/tcp/10300/ipfs/<PeerId (B)>
-;;; I am /ip4/127.0.0.1/tcp/10300/ipfs/<PeerId (B)>
-;;; Connecting to /ip4/127.0.0.1/tcp/10333/ipfs/<PeerId (A)>
+;;; I am /ip4/10.0.0.6/tcp/10300/p2p/<PeerId (B)>
+;;; I am /ip4/127.0.0.1/tcp/10300/p2p/<PeerId (B)>
+;;; Connecting to /ip4/127.0.0.1/tcp/10333/p2p/<PeerId (A)>
 ;;; ```
 ;;;
 ;;; And start chatting!

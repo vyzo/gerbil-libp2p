@@ -12,8 +12,8 @@
 ;;;After waiting a few seconds for the libp2p daemon to start up, you should get a list of multiaddresses to use to contact this node
 ;;;```
 ;;;starting up
-;;;I am /ip4/127.0.0.1/tcp/10333/ipfs/<PeerID-A>
-;;;I am /ip4/192.168.0.7/tcp/10333/ipfs/<PeerID-A>
+;;;I am /ip4/127.0.0.1/tcp/10333/p2p/<PeerID-A>
+;;;I am /ip4/192.168.0.7/tcp/10333/p2p/<PeerID-A>
 ;;;```
 ;;;
 ;;;Next, you need to start up other pubsub nodes to connect to this bootstrap node. In another terminal run

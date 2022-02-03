@@ -12,19 +12,19 @@
 ;;; ```
 ;;; > ./libp2p-chat.ss listen /ip4/0.0.0.0/tcp/10333/
 ;;;
-;;; I am /ip4/10.0.0.6/tcp/10333/ipfs/<PeerId (A)>
-;;; I am /ip4/127.0.0.1/tcp/10333/ipfs/<PeerId (A)>
+;;; I am /ip4/10.0.0.6/tcp/10333/p2p/<PeerId (A)>
+;;; I am /ip4/127.0.0.1/tcp/10333/p2p/<PeerId (A)>
 ;;; ```
 ;;;
 ;;; In the second terminal, start another node (B), which dials the listening node (A):
 ;;; ```
 ;;; > ./libp2p-chat.ss dial \
-;;; /ip4/127.0.0.1/tcp/10333/ipfs/<PeerId (A)> \
+;;; /ip4/127.0.0.1/tcp/10333/p2p/<PeerId (A)> \
 ;;; /ip4/0.0.0.0/tcp/10300
 ;;;
-;;; I am /ip4/10.0.0.6/tcp/10300/ipfs/<PeerId (B)>
-;;; I am /ip4/127.0.0.1/tcp/10300/ipfs/<PeerId (B)>
-;;; Connecting to /ip4/127.0.0.1/tcp/10333/ipfs/<PeerId (A)>
+;;; I am /ip4/10.0.0.6/tcp/10300/p2p/<PeerId (B)>
+;;; I am /ip4/127.0.0.1/tcp/10300/p2p/<PeerId (B)>
+;;; Connecting to /ip4/127.0.0.1/tcp/10333/p2p/<PeerId (A)>
 ;;; ```
 ;;;
 ;;; And start chatting!
