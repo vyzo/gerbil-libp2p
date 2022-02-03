@@ -151,7 +151,7 @@
 (defprotocol "wss" P_WSS 0 #f void void)
 (defprotocol "quic" P_QUIC 0 #f void void)
 (defprotocol "p2p-circuit" P_CIRCUIT 0 #f void void)
-(defprotocol "ipfs" P_P2P -1 #f base58-decode base58-encode)
+(defprotocol "p2p" P_P2P -1 #f base58-decode base58-encode)
 (defprotocol "dns4" P_DNS4 -1 #f string->utf8 utf8->string)
 (defprotocol "dns6" P_DNS6 -1 #f string->utf8 utf8->string)
 (defprotocol "dnsaddr" P_DNSADDR -1 #f string->utf8 utf8->string)
