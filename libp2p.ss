@@ -14,7 +14,9 @@
   ;; :vyzo/libp2p/daemon
   current-libp2p-daemon
   start-libp2p-daemon!
+  start-a-libp2p-daemon!
   stop-libp2p-daemon!
+  stop-the-libp2p-daemon!
   use-libp2p-daemon!
   ;; :vyzo/libp2p/client
   libp2p-error?
