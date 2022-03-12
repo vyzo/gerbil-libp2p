@@ -162,7 +162,7 @@
 
 ;;start a libp2p daemon that allows for circuit relays
 (def (do-circuit-relay host-addresses)
-  (let* ((d (start-libp2p-daemon! host-addresses: host-addresses options: ["-relayHop"] wait: 20))
+  (let* ((d (start-the-libp2p-daemon! host-addresses: host-addresses options: ["-relayHop"] wait: 20))
          (c (open-libp2p-client host-addresses: host-addresses wait: 20)))
     (for (p (peer-info->string* (libp2p-identify c)))
       (displayln "I am " p))

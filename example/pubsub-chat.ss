@@ -92,7 +92,7 @@
    (displayln "starting up")
 
    ;start the daemon with custom arguments -pubsub and -connManager to enable pubsub
-   (start-libp2p-daemon! host-addresses: host-addresses options: ["-pubsub" "-connManager"] wait: 10)
+   (start-the-libp2p-daemon! host-addresses: host-addresses options: ["-pubsub" "-connManager"] wait: 10)
 
    ;open a client with the given host-address, it will use the daemon already running
   (let* ((c (open-libp2p-client host-addresses: host-addresses wait: 10))

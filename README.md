@@ -56,12 +56,12 @@ You don't normally have to start the daemon, as `open-libp2p-client` will start 
 automatically. But you may want to control the `p2pd` executable path and options or
 want to reuse a running daemon.
 
-#### start-libp2p-daemon!
+#### start-the-libp2p-daemon!
 ```
-(start-libp2p-daemon! [daemon: (daemon "p2pd")]
-                      [options: (options [])]
-                      [address: (address #f)]
-                      [wait: (wait .4)])
+(start-the-libp2p-daemon! [daemon: (daemon "p2pd")]
+                          [options: (options [])]
+                          [address: (address #f)]
+                          [wait: (wait .4)])
  daemon  := string; the daemon executable
  options := list of strings; options to pass to the daemon
  address := daemon unix socket path
@@ -76,7 +76,7 @@ Ensures that a daemon is running, and starts it if there isn't one.
 (stop-libp2p-daemon! [daemon = (current-libp2p-daemon)])
 ```
 
-Kills the libp2p daemon if it was started with `start-libp2p-daemon!`.
+Kills the libp2p daemon if it was started with `start-the-libp2p-daemon!`.
 
 #### use-libp2p-daemon!
 ```
