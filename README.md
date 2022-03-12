@@ -56,6 +56,23 @@ You don't normally have to start the daemon, as `open-libp2p-client` will start 
 automatically. But you may want to control the `p2pd` executable path and options or
 want to reuse a running daemon.
 
+#### start-libp2p-daemon!
+```
+(start-libp2p-daemon! [daemon: (daemon "p2pd")]
+                      [options: (options [])]
+                      [address: (address #f)]
+                      [wait: (wait .4)])
+ daemon  := string; the daemon executable
+ options := list of strings; options to pass to the daemon
+ address := daemon unix socket path
+ wait    := how long to wait for daemon to initialize
+=> <daemon>
+```
+
+Starts a new daemon running without regard to `current-libp2p-daemon`.
+If a daemon is already running at `current-libp2p-daemon`,
+this ignores that and creates a new one anyway.
+
 #### start-the-libp2p-daemon!
 ```
 (start-the-libp2p-daemon! [daemon: (daemon "p2pd")]
@@ -69,14 +86,25 @@ want to reuse a running daemon.
 => <daemon>
 ```
 
-Ensures that a daemon is running, and starts it if there isn't one.
+Ensures that a daemon is running at `current-libp2p-daemon`,
+and starts and sets it only if there isn't one already.
 
 #### stop-libp2p-daemon!
 ```
 (stop-libp2p-daemon! [daemon = (current-libp2p-daemon)])
 ```
 
-Kills the libp2p daemon if it was started with `start-the-libp2p-daemon!`.
+Kills the given libp2p daemon if it was started with `start-libp2p-daemon!`.
+This does not change the value inside `current-libp2p-daemon`,
+even if the `daemon` argument is not provided or is equal to that value.
+
+#### stop-the-libp2p-daemon!
+```
+(stop-the-libp2p-daemon!)
+```
+
+Kills the libp2p daemon at `current-libp2p-daemon`,
+and sets the `current-libp2p-daemon` to false.
 
 #### use-libp2p-daemon!
 ```
@@ -85,7 +113,7 @@ Kills the libp2p daemon if it was started with `start-the-libp2p-daemon!`.
 => <daemon>
 ```
 
-Sets the current daemon to an external process with `path` as the unix control
+Sets the `current-libp2p-daemon` to an external process with `path` as the unix control
 socket path.
 
 
